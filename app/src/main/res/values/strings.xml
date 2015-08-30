@@ -9,4 +9,6 @@
 	<string name="creator">Creator: Joseph Yu</string>
 	<string name="author">Joseph Yu</string>
 	<string name="version">v0.1.0</string>
+	<string name="title_activity_main">MainActivity</string>
+	<string name="hello_world">Hello world!</string>
 </resources>
