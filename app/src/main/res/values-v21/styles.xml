@@ -12,4 +12,9 @@
 		<item name="android:windowActionBar">false</item>
 		<item name="android:windowTitleSize">0dp</item>
     </style>
+
+	<style name="ButtonStyle">
+		<item name="android:backgroundTint">@color/normal_background</item>
+		<item name="android:textColor">@color/theme_text_highlight</item>
+	</style>
 </resources>

@@ -42,24 +42,25 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="10dp"
 				android:gravity="center"
+				style="?android:attr/buttonBarButtonStyle"
 				android:id="@+id/buttonLayout">
 			<Button
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginEnd="10dp"
+					android:layout_marginRight="10dp"
 					android:layout_gravity="center_vertical"
 					android:text="@string/login"
-					android:textColor="@color/theme_text_highlight"
-					android:backgroundTint="@color/normal_background"
+					style="@style/ButtonStyle"
 					android:id="@+id/btnLogin"/>
 			<Button
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					android:layout_marginStart="10dp"
+					android:layout_marginLeft="10dp"
 					android:layout_gravity="center_vertical"
 					android:text="@string/exit"
-					android:textColor="@color/theme_text_highlight"
-					android:backgroundTint="@color/normal_background"
+					style="@style/ButtonStyle"
 					android:id="@+id/btnExit"/>
 		</LinearLayout>
 	</LinearLayout>
@@ -69,6 +70,7 @@
 			android:layout_gravity="bottom"
 			android:layout_alignParentBottom="true"
 			android:layout_alignParentEnd="true"
+			android:layout_alignParentRight="true"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:text="@string/creator"
 			android:textColor="@color/normal_text"
@@ -88,6 +90,8 @@
 			android:layout_above="@+id/tvTitle"
 			android:layout_alignParentTop="true"
 			android:layout_centerHorizontal="true"
+			android:layout_marginTop="10dp"
+			android:contentDescription="@string/app_name"
 			android:id="@+id/imageView"
 			android:src="@drawable/nuk_icon"/>
 	<TextView
@@ -95,6 +99,8 @@
 			android:layout_height="wrap_content"
 			android:layout_alignBaseline="@id/tvTitle"
 			android:layout_toEndOf="@+id/tvTitle"
+			android:layout_toRightOf="@+id/tvTitle"
+			android:layout_marginStart="15dp"
 			android:layout_marginLeft="15dp"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:text="@string/version"
