@@ -59,9 +59,9 @@
 					android:layout_marginStart="10dp"
 					android:layout_marginLeft="10dp"
 					android:layout_gravity="center_vertical"
-					android:text="@string/exit"
+					android:text="@string/clear"
 					style="@style/ButtonStyle"
-					android:id="@+id/btnExit"/>
+					android:id="@+id/btnClear"/>
 		</LinearLayout>
 	</LinearLayout>
 	<TextView

@@ -6,9 +6,12 @@
 	<string name="password">Password:</string>
 	<string name="login">Login</string>
 	<string name="exit">Exit</string>
+	<string name="clear">Clear</string>
 	<string name="creator">Creator: Joseph Yu</string>
 	<string name="author">Joseph Yu</string>
 	<string name="version">v0.1.0</string>
 	<string name="title_activity_main">MainActivity</string>
 	<string name="hello_world">Hello world!</string>
+	<string name="username_missing">Username missing</string>
+	<string name="password_missing">Password missing</string>
 </resources>
