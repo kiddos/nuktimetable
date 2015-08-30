@@ -1,17 +1,24 @@
 package com.kiddos.nuktimetable;
 
 import android.app.*;
-import android.content.Context;
-import android.net.*;
+import android.content.*;
+import android.net.Uri;
 import android.os.*;
 import android.util.*;
 import android.view.*;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.*;
 
-import java.io.*;
-import java.net.*;
-
 public class LoginFragment extends Fragment implements View.OnClickListener {
+	public static final String CONTENT_URL = "http://elearning.nuk.edu.tw/m_student/m_stu_index.php";
+	private static final String POST_URL = "http://stu.nuk.edu.tw/GEC/login_at2.asp";
+	private static final String USERNAME = "stuid";
+	private static final String PASSWORD = "stupw";
+	private static final String SETURL = "seturl";
+	private static final String SETURL_VALUE = "http://elearning.nuk.edu.tw/";
+	private static final String CHKID = "CHKID";
+	private static final String CHKID_VALUE = "9587";
 	private EditText username, password;
 	private OnLoginListener handler;
 
@@ -48,88 +55,45 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 							Toast.LENGTH_SHORT).show();
 					break;
 				}
+				String username = this.username.getText().toString();
+				String password = this.password.getText().toString();
 
-				new DownloadWebContent().execute(
-						username.getText().toString(),
-						password.getText().toString());
-				break;
-			case R.id.btnClear:
-				username.setText("");
-				password.setText("");
-				break;
-		}
-	}
-
-	private class DownloadWebContent extends AsyncTask<String, Void, String> {
-		private static final String POST_URL = "http://stu.nuk.edu.tw/GEC/login_at2.asp";
-//		private static final String POST_URL = "http://elearning.nuk.edu.tw/";
-//		private static final String POST_URL = "http://elearning.nuk.edu.tw/m_student/m_stu_index.php";
-		private static final String USERNAME = "stuid";
-		private static final String PASSWORD = "stupw";
-		private static final String TARGET = "seturl";
-		private static final String TARGET_URL = "http://elearning.nuk.edu.tw/";
-		private static final int READ_TIMEOUT = 6000;
-		private static final int CONNECTION_TIMEOUT = 6000;
-		private static final String METHOD = "POST";
-
-		@Override
-		protected String doInBackground(String... args) {
-			StringBuilder content = new StringBuilder();
-			try {
-				String username = args[0];
-				String password = args[1];
-				URL url = new URL(POST_URL);
-
-				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-				connection.setReadTimeout(READ_TIMEOUT);
-				connection.setConnectTimeout(CONNECTION_TIMEOUT);
-				connection.setRequestMethod(METHOD);
-				connection.setDoInput(true);
-				connection.setDoOutput(true);
+				final WebView webView = new WebView(getActivity());
+				final JavascriptHandler handler = new JavascriptHandler(this.handler);
+				webView.getSettings().setJavaScriptEnabled(true);
 
 				Uri.Builder builder = new Uri.Builder().
 						appendQueryParameter(USERNAME, username).
 						appendQueryParameter(PASSWORD, password).
-						appendQueryParameter(TARGET, TARGET_URL).
-						appendQueryParameter("CHKID", "9587");
+						appendQueryParameter(SETURL, SETURL_VALUE).
+						appendQueryParameter(CHKID, CHKID_VALUE);
 				String query = builder.build().getEncodedQuery();
+				webView.addJavascriptInterface(handler, JavascriptHandler.API);
 
-				OutputStream out = connection.getOutputStream();
-				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-				writer.write(query);
-				writer.flush();
-				writer.close();
-				out.close();
-
-				connection.connect();
-
-				if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-					InputStream in = connection.getInputStream();
-					BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-					String line;
-					while ((line = reader.readLine()) != null) {
-						Log.i("line: ", line);
-						content.append(line);
+				webView.setWebViewClient(new WebViewClient() {
+					@Override
+					public void onPageFinished(WebView view, String url) {
+						if (!url.equals(CONTENT_URL)) {
+							Log.i("load content", "load content");
+							webView.loadUrl(JavascriptHandler.CHECK_RESPONSE);
+							webView.loadUrl(CONTENT_URL);
+						} else {
+							if (handler.isPasswordCorrect()) {
+								Log.i("read content", "read content");
+								webView.loadUrl(JavascriptHandler.PROCESS_HTML);
+							} else {
+								Log.i("Failed", "password/username incorrect");
+							}
+						}
 					}
-				} else {
-					Log.i("DownloadWebContent", "response code: " + connection.getResponseCode());
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ArrayIndexOutOfBoundsException e) {
-				Log.i("DownloadWebContent", e.toString());
-			}
-			return content.toString();
-		}
+				});
 
-		@Override
-		protected void onPostExecute(String content) {
-			if (content.length() > 0) {
-				Log.i("DownloadWebContent", "download success");
-				handler.onLogin(content);
-			} else {
-				Log.i("DownloadWebContent", "download fail");
-			}
+				webView.postUrl(POST_URL, query.getBytes());
+				break;
+			case R.id.btnClear:
+				this.username.setText("");
+				this.password.setText("");
+				break;
 		}
 	}
 }
