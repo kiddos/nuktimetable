@@ -9,4 +9,5 @@
 	<color name="normal_background">#A4A4A4</color>
 	<color name="normal_text">#585858</color>
 	<color name="hint_text">#848484</color>
+	<color name="error_text">#FE2E2E</color>
 </resources>

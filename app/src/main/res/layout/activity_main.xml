@@ -14,7 +14,8 @@
 			android:layout_height="wrap_content"
 			android:layout_centerVertical="true"
 			android:gravity="center"
-			android:orientation="vertical" android:id="@+id/linearLayout">
+			android:orientation="vertical"
+			android:id="@+id/mainLayout">
 		<EditText
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -42,7 +43,6 @@
 				android:layout_height="wrap_content"
 				android:layout_marginTop="10dp"
 				android:gravity="center"
-				style="?android:attr/buttonBarButtonStyle"
 				android:id="@+id/buttonLayout">
 			<Button
 					android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
 	<TextView
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_above="@+id/linearLayout"
+			android:layout_above="@+id/mainLayout"
 			android:layout_centerHorizontal="true"
 			android:textAppearance="?android:attr/textAppearanceLarge"
 			android:text="@string/app_name"
@@ -105,4 +105,13 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:text="@string/version"
 			android:id="@+id/tvVersion"/>
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@+id/mainLayout"
+			android:layout_marginTop="20dp"
+			android:gravity="center"
+			android:textAppearance="?android:attr/textAppearanceMedium"
+			android:textColor="@color/error_text"
+			android:id="@+id/tvErrorMsg"/>
 </RelativeLayout>
