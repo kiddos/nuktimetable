@@ -1,5 +1,6 @@
 package com.kiddos.nuktimetable;
 
+import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.net.Uri;
@@ -42,6 +43,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	}
 
 	@Override
+	@SuppressLint({"setJavaScriptEnabled", "addJavascriptInterface"})
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btnLogin:
@@ -58,6 +60,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				String username = this.username.getText().toString();
 				String password = this.password.getText().toString();
 
+				// logging in
 				final WebView webView = new WebView(getActivity());
 				final JavascriptHandler handler = new JavascriptHandler(this.handler);
 				webView.getSettings().setJavaScriptEnabled(true);

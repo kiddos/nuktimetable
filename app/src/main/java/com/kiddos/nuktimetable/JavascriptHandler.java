@@ -2,9 +2,6 @@ package com.kiddos.nuktimetable;
 
 import android.util.Log;
 
-/**
- * Created by joseph on 2015/8/31.
- */
 public class JavascriptHandler {
 	public static final String API = "api";
 	public static final String CHECK_RESPONSE = "javascript:window.api." +
@@ -18,16 +15,14 @@ public class JavascriptHandler {
 		this.handler = handler;
 	}
 
+	@SuppressWarnings("unused")
 	@android.webkit.JavascriptInterface
 	public void checkResponse(String response) {
-		if (response.contains(LoginFragment.CONTENT_URL)) {
-			success = true;
-		} else {
-			success = false;
-		}
 		Log.i("response", response);
+		success = response.contains(LoginFragment.CONTENT_URL);
 	}
 
+	@SuppressWarnings("unused")
 	@android.webkit.JavascriptInterface
 	public void processHTML(String html) {
 		String[] lines = html.split("\n");
