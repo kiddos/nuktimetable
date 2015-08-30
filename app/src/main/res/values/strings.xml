@@ -1,0 +1,12 @@
+<resources>
+	<string name="app_name">NUK Time Table</string>
+	<string name="test">The Quick brown Fox jumps over the lazy dog</string>
+	<string name="action_settings">Settings</string>
+	<string name="user_name">User Name:</string>
+	<string name="password">Password:</string>
+	<string name="login">Login</string>
+	<string name="exit">Exit</string>
+	<string name="creator">Creator: Joseph Yu</string>
+	<string name="author">Joseph Yu</string>
+	<string name="version">v0.1.0</string>
+</resources>

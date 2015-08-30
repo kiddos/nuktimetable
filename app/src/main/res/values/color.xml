@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<color name="theme_background">#848484</color>
+	<color name="theme_background_light">#FFFFFF</color>
+	<color name="theme_background_dark">#585858</color>
+	<color name="theme_text">#FFFFFF</color>
+	<color name="theme_text_highlight">#F5DA81</color>
+	<color name="theme_text_highlight2">#FACC2E</color>
+	<color name="normal_background">#A4A4A4</color>
+	<color name="normal_text">#585858</color>
+	<color name="hint_text">#848484</color>
+</resources>
