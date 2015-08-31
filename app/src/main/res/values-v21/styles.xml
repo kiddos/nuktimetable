@@ -9,8 +9,8 @@
 		<item name="android:colorControlNormal">@color/theme_text_highlight</item>
 		<item name="android:colorControlActivated">@color/theme_text_highlight2</item>
 		<item name="android:colorControlHighlight">@color/theme_text_highlight2</item>
-		<item name="android:windowActionBar">false</item>
-		<item name="android:windowTitleSize">0dp</item>
+		<!--<item name="android:windowActionBar">false</item>-->
+		<!--<item name="android:windowTitleSize">0dp</item>-->
     </style>
 
 	<style name="ButtonStyle">
