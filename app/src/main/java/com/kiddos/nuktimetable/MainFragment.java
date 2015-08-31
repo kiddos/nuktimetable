@@ -13,7 +13,7 @@ public class MainFragment extends Fragment {
 							 Bundle savedInstanceState) {
 
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		TextView test = (TextView) rootView.findViewById(R.id.tvTest);
+		TextView test = (TextView) rootView.findViewById(R.id.test);
 
 		Bundle arg = getArguments();
 		String webContent = arg.getString(KEY_CONTENT);

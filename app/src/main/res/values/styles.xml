@@ -12,4 +12,19 @@
 		<item name="android:textColor">@color/theme_text_highlight</item>
 	</style>
 
+	<style name="RowStyle">
+		<item name="android:weightSum">6</item>
+	</style>
+
+	<style name="RowItemStyle">
+		<item name="android:layout_weight">1</item>
+		<item name="android:textColor">@color/theme_text_highlight2</item>
+		<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+	</style>
+
+	<style name="BlockStyle">
+		<item name="android:layout_weight">1</item>
+		<item name="android:layout_marginRight">3dp</item>
+	</style>
+
 </resources>

@@ -14,4 +14,57 @@
 	<string name="hello_world">Hello world!</string>
 	<string name="username_missing">Username missing</string>
 	<string name="password_missing">Password missing</string>
+
+	<!-- week days -->
+	<string name="monday_abbr">Mon</string>
+	<string name="tuesday_abbr">Tue</string>
+	<string name="wednesday_abbr">Wed</string>
+	<string name="thursday_abbr">Thu</string>
+	<string name="friday_abbr">Fri</string>
+	<string name="saturday_abbr">Sat</string>
+	<string name="sunday_abbr">Sun</string>
+	<string name="monday">Monday</string>
+	<string name="tuesday">Tuesday</string>
+	<string name="wednesday">WednesDay</string>
+	<string name="thursday">Thursday</string>
+	<string name="friday">Friday</string>
+	<string name="saturday">Saturday</string>
+	<string name="sunday">Sunday</string>
+
+	<!-- blocks -->
+	<string name="block">Block</string>
+	<string name="blockx">X</string>
+	<string name="block1">1</string>
+	<string name="block2">2</string>
+	<string name="block3">3</string>
+	<string name="block4">4</string>
+	<string name="blocky">Y</string>
+	<string name="block5">5</string>
+	<string name="block6">6</string>
+	<string name="block7">7</string>
+	<string name="block8">8</string>
+	<string name="block9">9</string>
+	<string name="block10">10</string>
+	<string name="block11">11</string>
+	<string name="block12">12</string>
+	<string name="block13">13</string>
+
+	<!-- time period -->
+	<string name="time_period">Time</string>
+	<string name="timex_1">07:05</string>
+	<string name="timex_2">07:55</string>
+	<string name="time1">08:05~08:55</string>
+	<string name="time2">09:05~09:55</string>
+	<string name="time3">10:10~11:00</string>
+	<string name="time4">11:10~12:00</string>
+	<string name="timey">12:10~13:00</string>
+	<string name="time5">13:10~14:00</string>
+	<string name="time6">14:10~15:00</string>
+	<string name="time7">15:15~16:05</string>
+	<string name="time8">16:20~17:10</string>
+	<string name="time9">17:20~18:10</string>
+	<string name="time10">18:20~19:10</string>
+	<string name="time11">19:15~20:05</string>
+	<string name="time12">20:10~21:00</string>
+	<string name="time13">21:05~21:55</string>
 </resources>
