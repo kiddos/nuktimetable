@@ -32,7 +32,6 @@
 	<string name="sunday">Sunday</string>
 
 	<!-- blocks -->
-	<string name="block">Block</string>
 	<string name="blockx">X</string>
 	<string name="block1">1</string>
 	<string name="block2">2</string>
@@ -67,4 +66,10 @@
 	<string name="time11">19:15~20:05</string>
 	<string name="time12">20:10~21:00</string>
 	<string name="time13">21:05~21:55</string>
+
+	<!-- examples -->
+	<string name="class_name_example">電子電路工程實驗(二)</string>
+	<string name="course_id">EEB04B</string>
+	<string name="classroom">C01-301-1</string>
+	<string name="instructor">江德光</string>
 </resources>

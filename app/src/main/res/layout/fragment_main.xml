@@ -62,7 +62,10 @@
 			  android:layout_height="wrap_content"
 			  android:id="@+id/test"/>
 	<GridView
-			android:layout_width="match_parent"
+			android:layout_width="fill_parent"
 			android:layout_height="wrap_content"
+			android:numColumns="6"
+			android:verticalSpacing="5dp"
+			android:stretchMode="columnWidth"
 			android:id="@+id/gridView"/>
 </LinearLayout>

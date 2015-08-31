@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent"
+			  android:background="@color/red"
+			  android:paddingTop="30dp"
+			  android:paddingBottom="30dp">
+
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginBottom="5dp"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="@string/class_name_example"
+			android:textColor="@color/theme_text"
+			android:textStyle="bold"
+			android:id="@+id/tvClassName"/>
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginBottom="5dp"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="@string/classroom"
+			android:textColor="@color/theme_text"
+			android:textStyle="bold"
+			android:id="@+id/tvClassroom"/>
+	<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center_horizontal"
+			android:textAppearance="?android:attr/textAppearanceSmall"
+			android:text="@string/instructor"
+			android:textColor="@color/theme_text"
+			android:id="@+id/tvInstructor"/>
+</LinearLayout>
