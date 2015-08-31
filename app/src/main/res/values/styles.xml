@@ -22,9 +22,5 @@
 		<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
 	</style>
 
-	<style name="BlockStyle">
-		<item name="android:layout_weight">1</item>
-		<item name="android:layout_marginRight">3dp</item>
-	</style>
 
 </resources>

@@ -1,11 +1,11 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
 			  xmlns:tools="http://schemas.android.com/tools"
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent"
 			  android:orientation="vertical"
 			  tools:context="com.kiddos.nuktimetable.MainFragment">
 
-	<TableLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/tableLayout">
+	<TableLayout android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/titleTable">
 		<TableRow
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
@@ -58,14 +58,156 @@
 					android:text="@string/friday_abbr"/>
 		</TableRow>
 	</TableLayout>
+	<ScrollView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_below="@id/titleTable"
+			android:id="@+id/scrollView">
+		<LinearLayout
+				android:orientation="vertical"
+				android:layout_width="match_parent"
+				android:layout_height="match_parent">
+			<LinearLayout
+					android:orientation="horizontal"
+					android:layout_width="fill_parent"
+					android:layout_height="match_parent"
+					android:weightSum="6">
+				<LinearLayout
+						android:orientation="vertical"
+						android:layout_width="fill_parent"
+						android:layout_height="fill_parent"
+						android:layout_weight="1"
+						android:weightSum="15">
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+					<include layout="@layout/block_item"/>
+				</LinearLayout>
+				<LinearLayout
+						android:orientation="vertical"
+						android:layout_width="fill_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:weightSum="15">
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+				</LinearLayout>
+				<LinearLayout
+						android:orientation="vertical"
+						android:layout_width="fill_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:weightSum="15">
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+				</LinearLayout>
+				<LinearLayout
+						android:orientation="vertical"
+						android:layout_width="fill_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:weightSum="15">
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+				</LinearLayout>
+				<LinearLayout
+						android:orientation="vertical"
+						android:layout_width="fill_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:weightSum="15">
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+				</LinearLayout>
+				<LinearLayout
+						android:orientation="vertical"
+						android:layout_width="fill_parent"
+						android:layout_height="match_parent"
+						android:layout_weight="1"
+						android:weightSum="15">
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+					<include layout="@layout/class_item" />
+				</LinearLayout>
+			</LinearLayout>
+		</LinearLayout>
+	</ScrollView>
 	<TextView android:layout_width="fill_parent"
 			  android:layout_height="wrap_content"
 			  android:id="@+id/test"/>
-	<GridView
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:numColumns="6"
-			android:verticalSpacing="5dp"
-			android:stretchMode="columnWidth"
-			android:id="@+id/gridView"/>
-</LinearLayout>
+</RelativeLayout>

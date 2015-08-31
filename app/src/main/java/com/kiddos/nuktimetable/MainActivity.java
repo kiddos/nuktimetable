@@ -20,7 +20,9 @@ public class MainActivity extends Activity implements OnLoginListener {
 		FragmentManager manager = this.getFragmentManager();
 		settingFragment = new LoginFragment();
 		mainFragment = new MainFragment();
-		manager.beginTransaction().add(R.id.container, settingFragment).commit();
+//		manager.beginTransaction().add(R.id.container, settingFragment).commit();
+		// FOR TESTING ONLY
+		manager.beginTransaction().add(R.id.container, mainFragment).commit();
 	}
 
 	private void setDisplayActionBar(final boolean display) {
