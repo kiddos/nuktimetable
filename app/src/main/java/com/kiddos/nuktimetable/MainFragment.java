@@ -61,6 +61,8 @@ public class MainFragment extends Fragment {
 		private static final int NUM_COL = 6;
 		private static final int NUM_ROW = 15;
 		private static final int TOTAL_ITEMS = NUM_COL * NUM_ROW;
+		private static final String EMPTY_TAG = "empty";
+		private static final String NON_EMPTY_TAG = "non empty";
 		private int[] layoutId = new int[TOTAL_ITEMS];
 		private Context context;
 		private Course[] courses = new Course[TOTAL_ITEMS];
@@ -202,6 +204,7 @@ public class MainFragment extends Fragment {
 				LayoutInflater inflater = LayoutInflater.from(context);
 				if (layoutId[position] == R.layout.block_item && isRowEmpty(position)) {
 					convertView = inflater.inflate(R.layout.empty_block_item, parent, false);
+					convertView.setTag(EMPTY_TAG);
 				} else if (layoutId[position] == R.layout.class_item && isRowEmpty(position)){
 					convertView = inflater.inflate(R.layout.empty_class_item, parent, false);
 				} else if (layoutId[position] == R.layout.class_item && !isRowEmpty(position) &&
@@ -209,6 +212,7 @@ public class MainFragment extends Fragment {
 					convertView = inflater.inflate(R.layout.empty_high_class_item, parent, false);
 				} else {
 					convertView = inflater.inflate(layoutId[position], parent, false);
+					convertView.setTag(NON_EMPTY_TAG);
 				}
 				shouldUpdate = true;
 			} else {
@@ -217,6 +221,7 @@ public class MainFragment extends Fragment {
 					LayoutInflater inflater = LayoutInflater.from(context);
 					if (layoutId[position] == R.layout.block_item && isRowEmpty(position)) {
 						convertView = inflater.inflate(R.layout.empty_block_item, parent, false);
+						convertView.setTag(EMPTY_TAG);
 					} else if (layoutId[position] == R.layout.class_item && isRowEmpty(position)){
 						convertView = inflater.inflate(R.layout.empty_class_item, parent, false);
 					} else if (layoutId[position] == R.layout.class_item && !isRowEmpty(position) &&
@@ -224,6 +229,7 @@ public class MainFragment extends Fragment {
 						convertView = inflater.inflate(R.layout.empty_high_class_item, parent, false);
 					} else {
 						convertView = inflater.inflate(layoutId[position], parent, false);
+						convertView.setTag(NON_EMPTY_TAG);
 					}
 					shouldUpdate = true;
 				}
@@ -231,8 +237,7 @@ public class MainFragment extends Fragment {
 
 			if (shouldUpdate) {
 				if (layoutId[position] == R.layout.block_item) {
-					int id = convertView.getId();
-					if (id == R.layout.block_item){
+					if (convertView.getTag().equals(NON_EMPTY_TAG)){
 						final TextView time1 = (TextView) convertView.findViewById(R.id.tvTime1);
 						final TextView time2 = (TextView) convertView.findViewById(R.id.tvTime2);
 						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
@@ -313,7 +318,7 @@ public class MainFragment extends Fragment {
 								block.setText(getResources().getString(R.string.block13));
 								break;
 						}
-					} else if (id == R.layout.empty_block_item) {
+					} else if (convertView.getTag().equals(EMPTY_TAG)) {
 						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
 						switch (position / 6) {
 							case 0:
@@ -367,10 +372,10 @@ public class MainFragment extends Fragment {
 					if (course != null) {
 						final TextView className = (TextView) convertView.findViewById(R.id.tvClassName);
 						final TextView classroom = (TextView) convertView.findViewById(R.id.tvClassroom);
-						final TextView instructor = (TextView) convertView.findViewById(R.id.tvInstructor);
+						final LinearLayout background = (LinearLayout) convertView.findViewById(R.id.background);
 						className.setText(course.getCourseName());
 						classroom.setText(course.getClassroom());
-						instructor.setText("");
+						background.setBackgroundColor(getResources().getColor(course.getColor()));
 					}
 				}
 			}

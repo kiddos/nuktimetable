@@ -11,11 +11,11 @@
 	<color name="hint_text">#848484</color>
 	<color name="error_text">#FE2E2E</color>
 	<color name="red">#FA5858</color>
-	<color name="orange">#FAAC58</color>
-	<color name="yellow">#F3F781</color>
-	<color name="green">#9FF781</color>
+	<color name="orange">#fa9a2d</color>
+	<color name="yellow">#f7e110</color>
+	<color name="green">#27c027</color>
 	<color name="blue">#58ACFA</color>
-	<color name="teal">#01DFD7</color>
-	<color name="purple">#BE81F7</color>
+	<color name="teal">#01c0b8</color>
+	<color name="purple">#ad74e5</color>
 	<color name="empty">#EEEEEE</color>
 </resources>
