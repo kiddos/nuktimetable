@@ -40,8 +40,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		final Button login = (Button) rootView.findViewById(R.id.btnLogin);
 		final Button clear = (Button) rootView.findViewById(R.id.btnClear);
 
+		// button event
 		login.setOnClickListener(this);
-		clear.setOnClickListener(this); return rootView;
+		clear.setOnClickListener(this);
+
+		// set initial login username/password if existed
+		SharedPreferences prefs = getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+		String un = prefs.getString(KEY_USERNAME, "");
+		String pw = prefs.getString(KEY_PASSWORD, "");
+		username.setText(un);
+		password.setText(pw);
+
+		return rootView;
 	}
 
 	@Override
@@ -50,7 +60,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		handler = (OnLoginListener) context;
 	}
 
-	private boolean isConnectingorConnected() {
+	private boolean isConnectingOrConnected() {
 		WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
 		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().
 				getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -68,7 +78,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btnLogin:
-				if (!isConnectingorConnected()) {
+				if (!isConnectingOrConnected()) {
 					Toast.makeText(getActivity(), getResources().
 							getString(R.string.network_issue), Toast.LENGTH_SHORT).show();
 					return;
