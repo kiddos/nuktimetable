@@ -3,6 +3,8 @@ package com.kiddos.nuktimetable;
 import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.*;
@@ -11,6 +13,8 @@ import android.view.*;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.*;
+
+import java.net.NetworkInterface;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 	public static final String CONTENT_URL = "http://elearning.nuk.edu.tw/m_student/m_stu_index.php";
@@ -26,6 +30,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	private static final String CHKID_VALUE = "9587";
 	private EditText username, password;
 	private OnLoginListener handler;
+	private ProgressDialog dialog;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,8 +41,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		final Button clear = (Button) rootView.findViewById(R.id.btnClear);
 
 		login.setOnClickListener(this);
-		clear.setOnClickListener(this);
-		return rootView;
+		clear.setOnClickListener(this); return rootView;
 	}
 
 	@Override
@@ -47,9 +51,14 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	}
 
 	private boolean isConnectingorConnected() {
-		WifiManager manager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
-		if (manager.isWifiEnabled()) {
-
+		WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().
+				getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (wifiManager.isWifiEnabled()) {
+			return true;
+		} else if (mobileInfo.isConnectedOrConnecting()) {
+			return true;
 		}
 		return false;
 	}
@@ -59,6 +68,17 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btnLogin:
+				if (!isConnectingorConnected()) {
+					Toast.makeText(getActivity(), getResources().
+							getString(R.string.network_issue), Toast.LENGTH_SHORT).show();
+					return;
+				}
+
+				// start progress dialog
+				dialog = new ProgressDialog(getActivity());
+				dialog.setTitle(getResources().getString(R.string.logging_in));
+				dialog.setMessage(getResources().getString(R.string.verifying));
+				dialog.show();
 				if (username.getText().toString().equals("")) {
 					Toast.makeText(getActivity(), getResources().getString(R.string.username_missing),
 							Toast.LENGTH_SHORT).show();
@@ -102,6 +122,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 										PREFERENCE, Context.MODE_PRIVATE);
 								prefs.edit().putString(KEY_USERNAME, username).
 										putString(KEY_PASSWORD, password).apply();
+
+								// progress dialog display
+								dialog.setMessage(getResources().getString(R.string.success));
 							} else {
 								Log.i("Failed", "password/username incorrect");
 							}
@@ -139,10 +162,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		@SuppressWarnings("unused")
 		@android.webkit.JavascriptInterface
 		public void processHTML(String html) {
-			String[] lines = html.split("\n");
-			for (String line : lines) {
-				Log.i("line", line);
-			}
+			// debuggin info
+			// String[] lines = html.split("\n");
+			// for (String line : lines) {
+			// 	Log.i("line", line);
+			// }
 
 			if (handler != null)
 				handler.onLogin(html);
@@ -150,6 +174,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				handler = (OnLoginListener) getActivity();
 				handler.onLogin(html);
 			}
+
+			// disable progress dialog
+			dialog.dismiss();
 		}
 
 		public boolean isPasswordCorrect() {

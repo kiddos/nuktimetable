@@ -14,6 +14,10 @@
 	<string name="hello_world">Hello world!</string>
 	<string name="username_missing">Username missing</string>
 	<string name="password_missing">Password missing</string>
+	<string name="network_issue">No Internet Access</string>
+	<string name="logging_in">Logging In</string>
+	<string name="verifying">Verifying Login Credentials</string>
+	<string name="success">Success</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>
