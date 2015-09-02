@@ -4,6 +4,7 @@
 	<string name="user_name">User Name:</string>
 	<string name="password">Password:</string>
 	<string name="action_logout">Logout</string>
+	<string name="action_reload">Reload</string>
 	<string name="login">Login</string>
 	<string name="exit">Exit</string>
 	<string name="clear">Clear</string>

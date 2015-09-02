@@ -4,5 +4,10 @@
 	<item android:id="@+id/action_logout"
 		  android:title="@string/action_logout"
 		  android:orderInCategory="100"
-		  android:showAsAction="always"/>
+		  android:showAsAction="ifRoom"/>
+	<item android:id="@+id/action_reload"
+		  android:title="@string/action_reload"
+		  android:icon="@drawable/ic_autorenew_white_24dp"
+		  android:orderInCategory="100"
+		  android:showAsAction="ifRoom"/>
 </menu>

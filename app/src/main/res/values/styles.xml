@@ -8,7 +8,7 @@
 	</style>
 
 	<style name="ButtonStyle">
-		<item name="android:background">@color/normal_background</item>
+		<item name="android:background">@color/theme_background</item>
 		<item name="android:textColor">@color/theme_text_highlight</item>
 	</style>
 
@@ -18,6 +18,7 @@
 
 	<style name="RowItemStyle">
 		<item name="android:layout_weight">1</item>
+		<item name="android:gravity">center</item>
 		<item name="android:textColor">@color/theme_text_highlight2</item>
 		<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
 	</style>
