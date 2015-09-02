@@ -6,28 +6,20 @@ import android.os.*;
 import android.view.*;
 import android.widget.*;
 
-import java.io.*;
 import java.util.*;
 
 public class MainFragment extends Fragment {
 	public static final String KEY_CONTENT = "content";
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
-
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
 
 		try {
-			InputStream in = getResources().openRawResource(R.raw.data);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-			String line;
-			StringBuilder content = new StringBuilder();
-			while ((line = reader.readLine()) != null) {
-				content.append(line);
-			}
-			HTMLParser parser = new HTMLParser(content.toString());
+			Bundle arg = getArguments();
+			String content = arg.getString(KEY_CONTENT, "");
+			HTMLParser parser = new HTMLParser(content);
 			ArrayList<Course> courses = parser.getCourses();
 			Collections.sort(courses);
 
@@ -46,7 +38,7 @@ public class MainFragment extends Fragment {
 					System.out.println(c.toString());
 				}
 			}
-		} catch(IOException e) {
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
