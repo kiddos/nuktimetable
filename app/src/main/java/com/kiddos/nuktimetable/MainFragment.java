@@ -13,8 +13,8 @@ public class MainFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
+		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+		final GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
 
 		try {
 			Bundle arg = getArguments();
@@ -24,6 +24,7 @@ public class MainFragment extends Fragment {
 			Collections.sort(courses);
 
 			if (courses.size() > 0) {
+				// find the latest courses and set adapter
 				Course latest = courses.get(0);
 				ArrayList<Course> latestCourses = new ArrayList<>();
 				for (Course course : courses) {
@@ -41,11 +42,6 @@ public class MainFragment extends Fragment {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
-//		TextView test = (TextView) rootView.findViewById(R.id.test);
-//		Bundle arg = getArguments();
-//		String webContent = arg.getString(KEY_CONTENT);
-//		test.setText(webContent);
 		return rootView;
 	}
 
@@ -130,16 +126,16 @@ public class MainFragment extends Fragment {
 				}
 			}
 
-			for (int i = 0 ; i < courses.length ; i ++) {
-				Course course = courses[i];
-				if (i % 6 == 0) {
-					System.out.println("time");
-				}
-				if (course != null)
-					System.out.print(course.getCourseName());
-				else
-					System.out.print("null");
-			}
+//			for (int i = 0 ; i < courses.length ; i ++) {
+//				Course course = courses[i];
+//				if (i % 6 == 0) {
+//					System.out.println("time");
+//				}
+//				if (course != null)
+//					System.out.print(course.getCourseName());
+//				else
+//					System.out.print("null");
+//			}
 		}
 
 		private int getColorSeq() {
@@ -180,19 +176,21 @@ public class MainFragment extends Fragment {
 
 		@Override
 		public Object getItem(int position) {
-			return null;
+			return courses[position];
 		}
 
 		@Override
 		public long getItemId(int position) {
-			return 0;
+			return position;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			boolean shouldUpdate = false;
 			final Course course = courses[position];
+
 			if (convertView == null) {
+				// decide which layout to use
 				LayoutInflater inflater = LayoutInflater.from(context);
 				if (layoutId[position] == R.layout.block_item && isRowEmpty(position)) {
 					convertView = inflater.inflate(R.layout.empty_block_item, parent, false);
@@ -211,6 +209,7 @@ public class MainFragment extends Fragment {
 				int id = convertView.getId();
 				if (id != layoutId[position]) {
 					LayoutInflater inflater = LayoutInflater.from(context);
+					// decide which layout to use
 					if (layoutId[position] == R.layout.block_item && isRowEmpty(position)) {
 						convertView = inflater.inflate(R.layout.empty_block_item, parent, false);
 						convertView.setTag(EMPTY_TAG);
@@ -230,6 +229,7 @@ public class MainFragment extends Fragment {
 			if (shouldUpdate) {
 				if (layoutId[position] == R.layout.block_item) {
 					if (convertView.getTag().equals(NON_EMPTY_TAG)){
+						// full block item
 						final TextView time1 = (TextView) convertView.findViewById(R.id.tvTime1);
 						final TextView time2 = (TextView) convertView.findViewById(R.id.tvTime2);
 						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
@@ -311,53 +311,24 @@ public class MainFragment extends Fragment {
 								break;
 						}
 					} else if (convertView.getTag().equals(EMPTY_TAG)) {
+						// shorten block item
 						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
 						switch (position / 6) {
-							case 0:
-								block.setText(getResources().getString(R.string.blockx));
-								break;
-							case 1:
-								block.setText(getResources().getString(R.string.block1));
-								break;
-							case 2:
-								block.setText(getResources().getString(R.string.block2));
-								break;
-							case 3:
-								block.setText(getResources().getString(R.string.block3));
-								break;
-							case 4:
-								block.setText(getResources().getString(R.string.block4));
-								break;
-							case 5:
-								block.setText(getResources().getString(R.string.blocky));
-								break;
-							case 6:
-								block.setText(getResources().getString(R.string.block5));
-								break;
-							case 7:
-								block.setText(getResources().getString(R.string.block6));
-								break;
-							case 8:
-								block.setText(getResources().getString(R.string.block7));
-								break;
-							case 9:
-								block.setText(getResources().getString(R.string.block8));
-								break;
-							case 10:
-								block.setText(getResources().getString(R.string.block9));
-								break;
-							case 11:
-								block.setText(getResources().getString(R.string.block10));
-								break;
-							case 12:
-								block.setText(getResources().getString(R.string.block11));
-								break;
-							case 13:
-								block.setText(getResources().getString(R.string.block12));
-								break;
-							case 14:
-								block.setText(getResources().getString(R.string.block13));
-								break;
+							case 0: block.setText(getResources().getString(R.string.blockx)); break;
+							case 1: block.setText(getResources().getString(R.string.block1)); break;
+							case 2: block.setText(getResources().getString(R.string.block2)); break;
+							case 3: block.setText(getResources().getString(R.string.block3)); break;
+							case 4: block.setText(getResources().getString(R.string.block4)); break;
+							case 5: block.setText(getResources().getString(R.string.blocky)); break;
+							case 6: block.setText(getResources().getString(R.string.block5)); break;
+							case 7: block.setText(getResources().getString(R.string.block6)); break;
+							case 8: block.setText(getResources().getString(R.string.block7)); break;
+							case 9: block.setText(getResources().getString(R.string.block8)); break;
+							case 10: block.setText(getResources().getString(R.string.block9)); break;
+							case 11: block.setText(getResources().getString(R.string.block10)); break;
+							case 12: block.setText(getResources().getString(R.string.block11)); break;
+							case 13: block.setText(getResources().getString(R.string.block12)); break;
+							case 14: block.setText(getResources().getString(R.string.block13)); break;
 						}
 					}
 				} else if (layoutId[position] == R.layout.class_item){
@@ -365,6 +336,7 @@ public class MainFragment extends Fragment {
 						final TextView className = (TextView) convertView.findViewById(R.id.tvClassName);
 						final TextView classroom = (TextView) convertView.findViewById(R.id.tvClassroom);
 						final LinearLayout background = (LinearLayout) convertView.findViewById(R.id.background);
+						// set all the views
 						className.setText(course.getCourseName());
 						classroom.setText(course.getClassroom());
 						background.setBackgroundColor(getResources().getColor(course.getColor()));
