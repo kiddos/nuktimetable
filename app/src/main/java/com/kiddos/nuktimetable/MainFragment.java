@@ -5,14 +5,12 @@ import android.content.*;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
-import org.w3c.dom.Text;
 
 import java.io.*;
 import java.util.*;
 
 public class MainFragment extends Fragment {
 	public static final String KEY_CONTENT = "content";
-	private ArrayList<Course> courses;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -30,7 +28,7 @@ public class MainFragment extends Fragment {
 				content.append(line);
 			}
 			HTMLParser parser = new HTMLParser(content.toString());
-			courses = parser.getCourses();
+			ArrayList<Course> courses = parser.getCourses();
 			Collections.sort(courses);
 
 			if (courses.size() > 0) {
@@ -137,6 +135,17 @@ public class MainFragment extends Fragment {
 					courses[index] = course;
 				}
 			}
+
+			for (int i = 0 ; i < courses.length ; i ++) {
+				Course course = courses[i];
+				if (i % 6 == 0) {
+					System.out.println("time");
+				}
+				if (course != null)
+					System.out.print(course.getCourseName());
+				else
+					System.out.print("null");
+			}
 		}
 
 		private int getColorSeq() {
@@ -153,6 +162,21 @@ public class MainFragment extends Fragment {
 			colorSeq ++;
 			if (colorSeq >= seq.length) colorSeq = 0;
 			return color;
+		}
+
+		private boolean isRowEmpty(int startingPosition) {
+			int i = startingPosition;
+			while (i >= 0) {
+				if (i % NUM_COL == 0) break;
+				i --;
+			}
+			int start = i;
+			for (; i < start + NUM_COL - 1 ; i ++) {
+				if (courses[i] != null) {
+					return false;
+				}
+			}
+			return true;
 		}
 
 		@Override
@@ -176,101 +200,169 @@ public class MainFragment extends Fragment {
 			final Course course = courses[position];
 			if (convertView == null) {
 				LayoutInflater inflater = LayoutInflater.from(context);
-				convertView = inflater.inflate(layoutId[position], parent, false);
+				if (layoutId[position] == R.layout.block_item && isRowEmpty(position)) {
+					convertView = inflater.inflate(R.layout.empty_block_item, parent, false);
+				} else if (layoutId[position] == R.layout.class_item && isRowEmpty(position)){
+					convertView = inflater.inflate(R.layout.empty_class_item, parent, false);
+				} else if (layoutId[position] == R.layout.class_item && !isRowEmpty(position) &&
+						courses[position] == null){
+					convertView = inflater.inflate(R.layout.empty_high_class_item, parent, false);
+				} else {
+					convertView = inflater.inflate(layoutId[position], parent, false);
+				}
 				shouldUpdate = true;
 			} else {
 				int id = convertView.getId();
 				if (id != layoutId[position]) {
 					LayoutInflater inflater = LayoutInflater.from(context);
-					convertView = inflater.inflate(layoutId[position], parent, false);
+					if (layoutId[position] == R.layout.block_item && isRowEmpty(position)) {
+						convertView = inflater.inflate(R.layout.empty_block_item, parent, false);
+					} else if (layoutId[position] == R.layout.class_item && isRowEmpty(position)){
+						convertView = inflater.inflate(R.layout.empty_class_item, parent, false);
+					} else if (layoutId[position] == R.layout.class_item && !isRowEmpty(position) &&
+							courses[position] == null){
+						convertView = inflater.inflate(R.layout.empty_high_class_item, parent, false);
+					} else {
+						convertView = inflater.inflate(layoutId[position], parent, false);
+					}
 					shouldUpdate = true;
 				}
 			}
 
 			if (shouldUpdate) {
 				if (layoutId[position] == R.layout.block_item) {
-					System.out.println("update, position / 6 = " + position / 6);
-					final TextView time1 = (TextView) convertView.findViewById(R.id.tvTime1);
-					final TextView time2 = (TextView) convertView.findViewById(R.id.tvTime2);
-					final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
-					switch (position / 6) {
-						case 0:
-							time1.setText(getResources().getString(R.string.timex_1));
-							time2.setText(getResources().getString(R.string.timex_2));
-							block.setText(getResources().getString(R.string.blockx));
-							break;
-						case 1:
-							time1.setText(getResources().getString(R.string.time1_1));
-							time2.setText(getResources().getString(R.string.time1_2));
-							block.setText(getResources().getString(R.string.block1));
-							break;
-						case 2:
-							time1.setText(getResources().getString(R.string.time2_1));
-							time2.setText(getResources().getString(R.string.time2_2));
-							block.setText(getResources().getString(R.string.block2));
-							break;
-						case 3:
-							time1.setText(getResources().getString(R.string.time3_1));
-							time2.setText(getResources().getString(R.string.time3_2));
-							block.setText(getResources().getString(R.string.block3));
-							break;
-						case 4:
-							time1.setText(getResources().getString(R.string.time4_1));
-							time2.setText(getResources().getString(R.string.time4_2));
-							block.setText(getResources().getString(R.string.block4));
-							break;
-						case 5:
-							time1.setText(getResources().getString(R.string.timey_1));
-							time2.setText(getResources().getString(R.string.timey_2));
-							block.setText(getResources().getString(R.string.blocky));
-							break;
-						case 6:
-							time1.setText(getResources().getString(R.string.time5_1));
-							time2.setText(getResources().getString(R.string.time5_2));
-							block.setText(getResources().getString(R.string.block5));
-							break;
-						case 7:
-							time1.setText(getResources().getString(R.string.time6_1));
-							time2.setText(getResources().getString(R.string.time6_2));
-							block.setText(getResources().getString(R.string.block6));
-							break;
-						case 8:
-							time1.setText(getResources().getString(R.string.time7_1));
-							time2.setText(getResources().getString(R.string.time7_2));
-							block.setText(getResources().getString(R.string.block7));
-							break;
-						case 9:
-							time1.setText(getResources().getString(R.string.time8_1));
-							time2.setText(getResources().getString(R.string.time8_2));
-							block.setText(getResources().getString(R.string.block8));
-							break;
-						case 10:
-							time1.setText(getResources().getString(R.string.time9_1));
-							time2.setText(getResources().getString(R.string.time9_2));
-							block.setText(getResources().getString(R.string.block9));
-							break;
-						case 11:
-							time1.setText(getResources().getString(R.string.time10_1));
-							time2.setText(getResources().getString(R.string.time10_2));
-							block.setText(getResources().getString(R.string.block10));
-							break;
-						case 12:
-							time1.setText(getResources().getString(R.string.time11_1));
-							time2.setText(getResources().getString(R.string.time11_2));
-							block.setText(getResources().getString(R.string.block11));
-							break;
-						case 13:
-							time1.setText(getResources().getString(R.string.time12_1));
-							time2.setText(getResources().getString(R.string.time12_2));
-							block.setText(getResources().getString(R.string.block12));
-							break;
-						case 14:
-							time1.setText(getResources().getString(R.string.time13_1));
-							time2.setText(getResources().getString(R.string.time13_2));
-							block.setText(getResources().getString(R.string.block13));
-							break;
+					int id = convertView.getId();
+					if (id == R.layout.block_item){
+						final TextView time1 = (TextView) convertView.findViewById(R.id.tvTime1);
+						final TextView time2 = (TextView) convertView.findViewById(R.id.tvTime2);
+						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
+						switch (position / 6) {
+							case 0:
+								time1.setText(getResources().getString(R.string.timex_1));
+								time2.setText(getResources().getString(R.string.timex_2));
+								block.setText(getResources().getString(R.string.blockx));
+								break;
+							case 1:
+								time1.setText(getResources().getString(R.string.time1_1));
+								time2.setText(getResources().getString(R.string.time1_2));
+								block.setText(getResources().getString(R.string.block1));
+								break;
+							case 2:
+								time1.setText(getResources().getString(R.string.time2_1));
+								time2.setText(getResources().getString(R.string.time2_2));
+								block.setText(getResources().getString(R.string.block2));
+								break;
+							case 3:
+								time1.setText(getResources().getString(R.string.time3_1));
+								time2.setText(getResources().getString(R.string.time3_2));
+								block.setText(getResources().getString(R.string.block3));
+								break;
+							case 4:
+								time1.setText(getResources().getString(R.string.time4_1));
+								time2.setText(getResources().getString(R.string.time4_2));
+								block.setText(getResources().getString(R.string.block4));
+								break;
+							case 5:
+								time1.setText(getResources().getString(R.string.timey_1));
+								time2.setText(getResources().getString(R.string.timey_2));
+								block.setText(getResources().getString(R.string.blocky));
+								break;
+							case 6:
+								time1.setText(getResources().getString(R.string.time5_1));
+								time2.setText(getResources().getString(R.string.time5_2));
+								block.setText(getResources().getString(R.string.block5));
+								break;
+							case 7:
+								time1.setText(getResources().getString(R.string.time6_1));
+								time2.setText(getResources().getString(R.string.time6_2));
+								block.setText(getResources().getString(R.string.block6));
+								break;
+							case 8:
+								time1.setText(getResources().getString(R.string.time7_1));
+								time2.setText(getResources().getString(R.string.time7_2));
+								block.setText(getResources().getString(R.string.block7));
+								break;
+							case 9:
+								time1.setText(getResources().getString(R.string.time8_1));
+								time2.setText(getResources().getString(R.string.time8_2));
+								block.setText(getResources().getString(R.string.block8));
+								break;
+							case 10:
+								time1.setText(getResources().getString(R.string.time9_1));
+								time2.setText(getResources().getString(R.string.time9_2));
+								block.setText(getResources().getString(R.string.block9));
+								break;
+							case 11:
+								time1.setText(getResources().getString(R.string.time10_1));
+								time2.setText(getResources().getString(R.string.time10_2));
+								block.setText(getResources().getString(R.string.block10));
+								break;
+							case 12:
+								time1.setText(getResources().getString(R.string.time11_1));
+								time2.setText(getResources().getString(R.string.time11_2));
+								block.setText(getResources().getString(R.string.block11));
+								break;
+							case 13:
+								time1.setText(getResources().getString(R.string.time12_1));
+								time2.setText(getResources().getString(R.string.time12_2));
+								block.setText(getResources().getString(R.string.block12));
+								break;
+							case 14:
+								time1.setText(getResources().getString(R.string.time13_1));
+								time2.setText(getResources().getString(R.string.time13_2));
+								block.setText(getResources().getString(R.string.block13));
+								break;
+						}
+					} else if (id == R.layout.empty_block_item) {
+						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
+						switch (position / 6) {
+							case 0:
+								block.setText(getResources().getString(R.string.blockx));
+								break;
+							case 1:
+								block.setText(getResources().getString(R.string.block1));
+								break;
+							case 2:
+								block.setText(getResources().getString(R.string.block2));
+								break;
+							case 3:
+								block.setText(getResources().getString(R.string.block3));
+								break;
+							case 4:
+								block.setText(getResources().getString(R.string.block4));
+								break;
+							case 5:
+								block.setText(getResources().getString(R.string.blocky));
+								break;
+							case 6:
+								block.setText(getResources().getString(R.string.block5));
+								break;
+							case 7:
+								block.setText(getResources().getString(R.string.block6));
+								break;
+							case 8:
+								block.setText(getResources().getString(R.string.block7));
+								break;
+							case 9:
+								block.setText(getResources().getString(R.string.block8));
+								break;
+							case 10:
+								block.setText(getResources().getString(R.string.block9));
+								break;
+							case 11:
+								block.setText(getResources().getString(R.string.block10));
+								break;
+							case 12:
+								block.setText(getResources().getString(R.string.block11));
+								break;
+							case 13:
+								block.setText(getResources().getString(R.string.block12));
+								break;
+							case 14:
+								block.setText(getResources().getString(R.string.block13));
+								break;
+						}
 					}
-
 				} else if (layoutId[position] == R.layout.class_item){
 					if (course != null) {
 						final TextView className = (TextView) convertView.findViewById(R.id.tvClassName);
