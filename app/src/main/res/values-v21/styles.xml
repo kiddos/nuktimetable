@@ -14,7 +14,7 @@
     </style>
 
 	<style name="ButtonStyle">
-		<item name="android:backgroundTint">@color/normal_background</item>
-		<item name="android:textColor">@color/theme_text_highlight</item>
+		<item name="android:backgroundTint">@color/theme_background_dark</item>
+		<item name="android:textColor">@color/theme_text</item>
 	</style>
 </resources>

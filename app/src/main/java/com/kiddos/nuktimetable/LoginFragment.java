@@ -32,7 +32,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	private static final int READ_TIMEOUT = 6000;
 	private EditText username, password;
 	private TextView errorMsg;
-	private ProgressDialog dialog;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -80,25 +79,21 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 					return;
 				}
 
-				// start progress dialog
-				dialog = new ProgressDialog(getActivity());
-				dialog.setTitle(getResources().getString(R.string.logging_in));
-				dialog.setMessage(getResources().getString(R.string.verifying));
-				dialog.show();
 				if (username.getText().toString().equals("")) {
 					Toast.makeText(getActivity(), getResources().getString(R.string.username_missing),
 							Toast.LENGTH_SHORT).show();
+					errorMsg.setText(getResources().getString(R.string.username_missing));
 					break;
 				}
 				if (password.getText().toString().equals("")) {
 					Toast.makeText(getActivity(), getResources().getString(R.string.password_missing),
 							Toast.LENGTH_SHORT).show();
+					errorMsg.setText(getResources().getString(R.string.password_missing));
 					break;
 				}
 				final String username = this.username.getText().toString();
 				final String password = this.password.getText().toString();
 
-				// logging in
 				new LoginTask().execute(username, password);
 				break;
 			case R.id.btnClear:
@@ -109,6 +104,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	}
 
 	private class LoginTask extends AsyncTask<String, Void, String> {
+		private ProgressDialog dialog;
+		@Override
+		protected void onPreExecute() {
+			// start progress dialog
+			dialog = new ProgressDialog(getActivity());
+			dialog.setTitle(getResources().getString(R.string.logging_in));
+			dialog.setMessage(getResources().getString(R.string.verifying));
+			dialog.show();
+		}
+
 		@Override
 		protected String doInBackground(String... arg) {
 			try {
@@ -183,9 +188,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		protected void onPostExecute(String content) {
 			switch (content) {
 				case RESULT_WRONG_CREDENTIALS:
-					String error = getResources().getString(R.string.login_fail);
-					errorMsg.setText(error);
-					dialog.setMessage(error);
+					errorMsg.setText(getResources().getString(R.string.wrong_username_password));
+					dialog.setMessage(getResources().getString(R.string.login_fail));
 					break;
 				case RESULT_EXCEPTION_OCCUR:
 					dialog.setMessage(getResources().getString(R.string.fail));

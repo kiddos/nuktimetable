@@ -21,6 +21,7 @@
 	<string name="success">Success</string>
 	<string name="fail">Fail</string>
 	<string name="login_fail">Login Fail</string>
+	<string name="wrong_username_password">Wrong Username/Password</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>
