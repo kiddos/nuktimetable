@@ -1,6 +1,5 @@
 package com.kiddos.nuktimetable;
 
-import android.annotation.SuppressLint;
 import android.app.*;
 import android.content.*;
 import android.net.ConnectivityManager;
@@ -10,24 +9,29 @@ import android.net.wifi.WifiManager;
 import android.os.*;
 import android.util.*;
 import android.view.*;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.*;
 
-import java.net.NetworkInterface;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 	public static final String CONTENT_URL = "http://elearning.nuk.edu.tw/m_student/m_stu_index.php";
+	public static final String LOGIN_URL = "http://stu.nuk.edu.tw/GEC/login_at2.asp";
 	public static final String PREFERENCE = "prefs";
 	public static final String KEY_USERNAME = "username";
 	public static final String KEY_PASSWORD = "password";
-	private static final String POST_URL = "http://stu.nuk.edu.tw/GEC/login_at2.asp";
 	private static final String USERNAME = "stuid";
 	private static final String PASSWORD = "stupw";
 	private static final String SETURL = "seturl";
 	private static final String SETURL_VALUE = "http://elearning.nuk.edu.tw/";
 	private static final String CHKID = "CHKID";
 	private static final String CHKID_VALUE = "9587";
+	private static final String POST_METHOD = "POST";
+	private static final String RESULT_WRONG_CREDENTIALS = "wrong";
+	private static final String RESULT_EXCEPTION_OCCUR = "exception";
+	private static final int CONNECTION_TIMEOUT = 6000;
+	private static final int READ_TIMEOUT = 6000;
 	private EditText username, password;
 	private OnLoginListener handler;
 	private ProgressDialog dialog;
@@ -64,7 +68,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
 		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().
 				getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo mobileInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		NetworkInfo mobileInfo = connectivityManager.getActiveNetworkInfo();
 		if (wifiManager.isWifiEnabled()) {
 			return true;
 		} else if (mobileInfo.isConnectedOrConnecting()) {
@@ -74,7 +78,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	}
 
 	@Override
-	@SuppressLint({"setJavaScriptEnabled", "addJavascriptInterface"})
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.btnLogin:
@@ -103,46 +106,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				final String password = this.password.getText().toString();
 
 				// logging in
-				final WebView webView = new WebView(getActivity());
-				final JavascriptHandler handler = new JavascriptHandler();
-				webView.getSettings().setJavaScriptEnabled(true);
-
-				Uri.Builder builder = new Uri.Builder().
-						appendQueryParameter(USERNAME, username).
-						appendQueryParameter(PASSWORD, password).
-						appendQueryParameter(SETURL, SETURL_VALUE).
-						appendQueryParameter(CHKID, CHKID_VALUE);
-				String query = builder.build().getEncodedQuery();
-				webView.addJavascriptInterface(handler, JavascriptHandler.API);
-
-				webView.setWebViewClient(new WebViewClient() {
-					@Override
-					public void onPageFinished(WebView view, String url) {
-						if (!url.equals(CONTENT_URL)) {
-							Log.i("load content", "load content");
-							webView.loadUrl(JavascriptHandler.CHECK_RESPONSE);
-							webView.loadUrl(CONTENT_URL);
-						} else {
-							if (handler.isPasswordCorrect()) {
-								Log.i("read content", "read content");
-								webView.loadUrl(JavascriptHandler.PROCESS_HTML);
-
-								// store the username and password as log in preference
-								SharedPreferences prefs = getActivity().getSharedPreferences(
-										PREFERENCE, Context.MODE_PRIVATE);
-								prefs.edit().putString(KEY_USERNAME, username).
-										putString(KEY_PASSWORD, password).apply();
-
-								// progress dialog display
-								dialog.setMessage(getResources().getString(R.string.success));
-							} else {
-								Log.i("Failed", "password/username incorrect");
-							}
-						}
-					}
-				});
-
-				webView.postUrl(POST_URL, query.getBytes());
+				new LoginTask(handler).execute(username, password);
 				break;
 			case R.id.btnClear:
 				this.username.setText("");
@@ -151,46 +115,98 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		}
 	}
 
-	private class JavascriptHandler {
-		public static final String API = "api";
-		public static final String CHECK_RESPONSE = "javascript:window.api." +
-				"checkResponse('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');";
-		public static final String PROCESS_HTML = "javascript:window.api." +
-				"processHTML('<html>'+document.getElementsByTagName('html')[0].innerHTML+'</html>');";
-		private boolean success = false;
-
-		public JavascriptHandler() {
+	private class LoginTask extends AsyncTask<String, Void, String> {
+		private OnLoginListener handler;
+		public LoginTask(OnLoginListener handler) {
+			this.handler = handler;
 		}
+		@Override
+		protected String doInBackground(String... arg) {
+			try {
+				final String username = arg[0];
+				final String password = arg[1];
+				URL url = new URL(LOGIN_URL);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod(POST_METHOD);
+				connection.setConnectTimeout(CONNECTION_TIMEOUT);
+				connection.setReadTimeout(READ_TIMEOUT);
+				connection.setRequestProperty("Connection", "keep-alive");
+				connection.setRequestProperty("Accept-Charset", "utf-8");
+				connection.setRequestProperty("Cookie", "");
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
 
-		@SuppressWarnings("unused")
-		@android.webkit.JavascriptInterface
-		public void checkResponse(String response) {
-			Log.i("response", response);
-			success = response.contains(LoginFragment.CONTENT_URL);
-		}
+				Uri.Builder builder = new Uri.Builder().
+						appendQueryParameter(USERNAME, username).
+						appendQueryParameter(PASSWORD, password).
+						appendQueryParameter(SETURL, SETURL_VALUE).
+						appendQueryParameter(CHKID, CHKID_VALUE);
 
-		@SuppressWarnings("unused")
-		@android.webkit.JavascriptInterface
-		public void processHTML(String html) {
-			// debuggin info
-			// String[] lines = html.split("\n");
-			// for (String line : lines) {
-			// 	Log.i("line", line);
-			// }
+				final String query = builder.build().getEncodedQuery();
+				OutputStream out = connection.getOutputStream();
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+				writer.write(query);
+				writer.flush();
+				writer.close();
+				out.close();
 
-			if (handler != null)
-				handler.onLogin(html);
-			else {
-				handler = (OnLoginListener) getActivity();
-				handler.onLogin(html);
+				connection.connect();
+
+				final StringBuilder response = new StringBuilder();
+				InputStream in = connection.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					System.out.println(line);
+					response.append(line);
+				}
+				if (!response.toString().contains(CONTENT_URL)) {
+					Log.i("LoginTask", "Wrong Username/Password");
+					return RESULT_WRONG_CREDENTIALS;
+				}
+
+				String cookies = connection.getHeaderField("Set-Cookie");
+				Log.i("LoginTask", "Cookie: " + cookies);
+				url = new URL(CONTENT_URL);
+				connection = (HttpURLConnection) url.openConnection();
+				connection.setConnectTimeout(CONNECTION_TIMEOUT);
+				connection.setReadTimeout(READ_TIMEOUT);
+				connection.setRequestProperty("Connection", "keep-alive");
+				connection.setRequestProperty("Accept-Charset", "utf-8");
+				connection.setRequestProperty("Cookie", cookies);
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
+
+				final StringBuilder content = new StringBuilder();
+				Log.i("LoginTask", "html content");
+				in = connection.getInputStream();
+				reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+				while ((line = reader.readLine()) != null) {
+					System.out.println(line);
+					content.append(line);
+				}
+				return content.toString();
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
-
-			// disable progress dialog
-			dialog.dismiss();
+			return RESULT_EXCEPTION_OCCUR;
 		}
 
-		public boolean isPasswordCorrect() {
-			return success;
+		@Override
+		protected void onPostExecute(String content) {
+			switch (content) {
+				case RESULT_WRONG_CREDENTIALS:
+					dialog.setMessage(getResources().getString(R.string.login_fail));
+					break;
+				case RESULT_EXCEPTION_OCCUR:
+					dialog.setMessage(getResources().getString(R.string.fail));
+					break;
+				default:
+					if (handler != null)
+						handler.onLogin(content);
+					break;
+			}
+			dialog.dismiss();
 		}
 	}
 }

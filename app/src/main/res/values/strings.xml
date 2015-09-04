@@ -19,6 +19,8 @@
 	<string name="logging_in">Logging In</string>
 	<string name="verifying">Verifying Login Credentials</string>
 	<string name="success">Success</string>
+	<string name="fail">Fail</string>
+	<string name="login_fail">Login Fail</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>
