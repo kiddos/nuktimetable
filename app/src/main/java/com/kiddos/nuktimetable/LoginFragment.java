@@ -2,10 +2,8 @@ package com.kiddos.nuktimetable;
 
 import android.app.*;
 import android.content.*;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.net.wifi.WifiManager;
+import android.net.*;
+import android.net.wifi.*;
 import android.os.*;
 import android.util.*;
 import android.view.*;
@@ -33,7 +31,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	private static final int CONNECTION_TIMEOUT = 6000;
 	private static final int READ_TIMEOUT = 6000;
 	private EditText username, password;
-	private OnLoginListener handler;
+	private TextView errorMsg;
 	private ProgressDialog dialog;
 
 	@Override
@@ -41,6 +39,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 		username = (EditText) rootView.findViewById(R.id.etUserName);
 		password = (EditText) rootView.findViewById(R.id.etPassword);
+		errorMsg = (TextView) rootView.findViewById(R.id.tvErrorMsg);
 		final Button login = (Button) rootView.findViewById(R.id.btnLogin);
 		final Button clear = (Button) rootView.findViewById(R.id.btnClear);
 
@@ -56,12 +55,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		password.setText(pw);
 
 		return rootView;
-	}
-
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		handler = (OnLoginListener) context;
 	}
 
 	private boolean isConnectingOrConnected() {
@@ -106,7 +99,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				final String password = this.password.getText().toString();
 
 				// logging in
-				new LoginTask(handler).execute(username, password);
+				new LoginTask().execute(username, password);
 				break;
 			case R.id.btnClear:
 				this.username.setText("");
@@ -116,10 +109,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	}
 
 	private class LoginTask extends AsyncTask<String, Void, String> {
-		private OnLoginListener handler;
-		public LoginTask(OnLoginListener handler) {
-			this.handler = handler;
-		}
 		@Override
 		protected String doInBackground(String... arg) {
 			try {
@@ -166,7 +155,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				}
 
 				String cookies = connection.getHeaderField("Set-Cookie");
-				Log.i("LoginTask", "Cookie: " + cookies);
 				url = new URL(CONTENT_URL);
 				connection = (HttpURLConnection) url.openConnection();
 				connection.setConnectTimeout(CONNECTION_TIMEOUT);
@@ -178,13 +166,12 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				connection.setDoOutput(true);
 
 				final StringBuilder content = new StringBuilder();
-				Log.i("LoginTask", "html content");
 				in = connection.getInputStream();
 				reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 				while ((line = reader.readLine()) != null) {
-					System.out.println(line);
 					content.append(line);
 				}
+				connection.disconnect();
 				return content.toString();
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -196,14 +183,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		protected void onPostExecute(String content) {
 			switch (content) {
 				case RESULT_WRONG_CREDENTIALS:
-					dialog.setMessage(getResources().getString(R.string.login_fail));
+					String error = getResources().getString(R.string.login_fail);
+					errorMsg.setText(error);
+					dialog.setMessage(error);
 					break;
 				case RESULT_EXCEPTION_OCCUR:
 					dialog.setMessage(getResources().getString(R.string.fail));
 					break;
 				default:
-					if (handler != null)
+					try {
+						OnLoginListener handler = (OnLoginListener) getActivity();
 						handler.onLogin(content);
+					} catch (ClassCastException e) {
+						e.printStackTrace();
+					}
 					break;
 			}
 			dialog.dismiss();
