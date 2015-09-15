@@ -337,9 +337,9 @@ public class MainFragment extends Fragment {
 						final TextView classroom = (TextView) convertView.findViewById(R.id.tvClassroom);
 						final LinearLayout background = (LinearLayout) convertView.findViewById(R.id.background);
 						// set all the views
-						className.setText(course.getCourseName());
-						classroom.setText(course.getClassroom());
-						background.setBackgroundColor(getResources().getColor(course.getColor()));
+						if (className != null) className.setText(course.getCourseName());
+						if (classroom != null) classroom.setText(course.getClassroom());
+						if (background != null) background.setBackgroundColor(getResources().getColor(course.getColor()));
 					}
 				}
 			}
