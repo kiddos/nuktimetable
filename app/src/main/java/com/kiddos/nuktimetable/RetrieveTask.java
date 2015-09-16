@@ -53,10 +53,17 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	@Override
 	protected void onPreExecute() {
 		// start progress dialog
-		dialog = new ProgressDialog(context);
-		dialog.setTitle(context.getResources().getString(R.string.logging_in));
-		dialog.setMessage(context.getResources().getString(R.string.verifying));
-		dialog.show();
+		// protect from crashing
+		// if the user decide to hide the ui
+		// and the retrieve task return
+		try {
+			dialog = new ProgressDialog(context);
+			dialog.setTitle(context.getResources().getString(R.string.logging_in));
+			dialog.setMessage(context.getResources().getString(R.string.verifying));
+			dialog.show();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -137,17 +144,17 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 			case RESULT_WRONG_CREDENTIALS:
 				if (mode.equals(MODE_LOGIN)) {
 					errorMsg.setText(context.getResources().getString(R.string.wrong_username_password));
-					dialog.setMessage(context.getResources().getString(R.string.login_fail));
+					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.login_fail));
 				} else if (mode.equals(MODE_RELOAD)) {
-					dialog.setMessage(context.getResources().getString(R.string.reload_fail));
+					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.reload_fail));
 				}
 				break;
 			case RESULT_EXCEPTION_OCCUR:
 				if (mode.equals(MODE_LOGIN)) {
 					errorMsg.setText(context.getResources().getString(R.string.conntection_timeout));
-					dialog.setMessage(context.getResources().getString(R.string.fail));
+					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.fail));
 				} else if (mode.equals(MODE_RELOAD)){
-					dialog.setMessage(context.getResources().getString(R.string.conntection_timeout));
+					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.conntection_timeout));
 				}
 				break;
 			default:
@@ -189,6 +196,14 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 				}
 				break;
 		}
-		dialog.dismiss();
+
+		// protect from crashing
+		// if the user decide to hide the ui
+		// and the retrieve task return
+		try {
+			if (dialog != null) dialog.dismiss();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

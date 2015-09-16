@@ -10,7 +10,7 @@ public class MainActivity extends Activity implements OnLoginListener {
 	public static final String PREFERENCE = "main_prefs";
 	public static final String KEY_DATA = "data";
 	public static final String KEY_LOGIN_SUCCESS = "login";
-	private Fragment settingFragment;
+	private Fragment loginFragment;
 	private Fragment mainFragment;
 	private Handler handler;
 
@@ -22,8 +22,13 @@ public class MainActivity extends Activity implements OnLoginListener {
 		handler = new Handler();
 		setDisplayActionBar(false);
 
+		if (savedInstanceState != null) {
+			setDisplayActionBar(true);
+			return;
+		}
+
 		FragmentManager manager = this.getFragmentManager();
-		settingFragment = new LoginFragment();
+		loginFragment = new LoginFragment();
 		mainFragment = new MainFragment();
 
 		SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
@@ -37,7 +42,7 @@ public class MainActivity extends Activity implements OnLoginListener {
 			mainFragment.setArguments(arg);
 			manager.beginTransaction().add(R.id.container, mainFragment).commit();
 		} else {
-			manager.beginTransaction().add(R.id.container, settingFragment).commit();
+			manager.beginTransaction().add(R.id.container, loginFragment).commit();
 		}
 	}
 
@@ -65,7 +70,11 @@ public class MainActivity extends Activity implements OnLoginListener {
 		int id = item.getItemId();
 		if (id == R.id.action_logout) {
 			setDisplayActionBar(false);
-			getFragmentManager().beginTransaction().replace(R.id.container, settingFragment).commit();
+			if (loginFragment == null) {
+				loginFragment = new LoginFragment();
+			}
+			getFragmentManager().beginTransaction().
+					replace(R.id.container, loginFragment).commit();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -83,7 +92,18 @@ public class MainActivity extends Activity implements OnLoginListener {
 		// change to main fragment
 		Bundle arg = new Bundle();
 		arg.putString(MainFragment.KEY_CONTENT, webContent);
+		if (mainFragment == null) {
+			mainFragment = new MainFragment();
+		}
 		mainFragment.setArguments(arg);
-		getFragmentManager().beginTransaction().replace(R.id.container, mainFragment).commit();
+		// protect from crashing
+		// if the user decide to hide the ui
+		// and the retrieve task return
+		try {
+			getFragmentManager().beginTransaction().
+					replace(R.id.container, mainFragment).commit();
+		} catch (IllegalStateException e) {
+			e.printStackTrace();
+		}
 	}
 }
