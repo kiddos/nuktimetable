@@ -9,12 +9,12 @@ import android.widget.TextView;
 
 import java.io.*;
 import java.net.*;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class RetrieveTask extends AsyncTask<String, Void, String> {
 	public static final String CONTENT_URL = "http://elearning.nuk.edu.tw/m_student/m_stu_index.php";
 	public static final String LOGIN_URL = "http://stu.nuk.edu.tw/GEC/login_at2.asp";
-	public static final String KEY_USERNAME = "username";
-	public static final String KEY_PASSWORD = "password";
 	public static final String USERNAME = "stuid";
 	public static final String PASSWORD = "stupw";
 	public static final String SETURL = "seturl";
@@ -33,6 +33,7 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	private TextView errorMsg;
 	private String mode;
 	private OnLoginListener handler;
+	private MainFragment.ScheduleAdapter adapter;
 
 	public RetrieveTask(Context context, final OnLoginListener handler, final TextView errorMsg) {
 		this.context = context;
@@ -42,9 +43,9 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 		this.mode = MODE_LOGIN;
 	}
 
-	public RetrieveTask(Context context) {
+	public RetrieveTask(final Context context, final MainFragment.ScheduleAdapter adapter) {
 		this.context = context;
-
+		this.adapter = adapter;
 
 		this.mode = MODE_RELOAD;
 	}
@@ -134,23 +135,56 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	protected void onPostExecute(String content) {
 		switch (content) {
 			case RESULT_WRONG_CREDENTIALS:
-				errorMsg.setText(context.getResources().getString(R.string.wrong_username_password));
-				dialog.setMessage(context.getResources().getString(R.string.login_fail));
+				if (mode.equals(MODE_LOGIN)) {
+					errorMsg.setText(context.getResources().getString(R.string.wrong_username_password));
+					dialog.setMessage(context.getResources().getString(R.string.login_fail));
+				} else if (mode.equals(MODE_RELOAD)) {
+					dialog.setMessage(context.getResources().getString(R.string.reload_fail));
+				}
 				break;
 			case RESULT_EXCEPTION_OCCUR:
-				errorMsg.setText(context.getResources().getString(R.string.conntection_timeout));
-				dialog.setMessage(context.getResources().getString(R.string.fail));
+				if (mode.equals(MODE_LOGIN)) {
+					errorMsg.setText(context.getResources().getString(R.string.conntection_timeout));
+					dialog.setMessage(context.getResources().getString(R.string.fail));
+				} else if (mode.equals(MODE_RELOAD)){
+					dialog.setMessage(context.getResources().getString(R.string.conntection_timeout));
+				}
 				break;
 			default:
-				if (handler != null) {
-					handler.onLogin(content);
-				} else {
-					Log.i("onPostExecute", "hander null");
-					try {
-						OnLoginListener handler = (OnLoginListener) context;
+				if (mode.equals(MODE_LOGIN)) {
+					if (handler != null) {
 						handler.onLogin(content);
-					} catch (ClassCastException e) {
-						e.printStackTrace();
+					} else {
+						Log.i("onPostExecute", "handler null");
+						try {
+							final OnLoginListener handler = (OnLoginListener) context;
+							handler.onLogin(content);
+						} catch (ClassCastException e) {
+							e.printStackTrace();
+						}
+					}
+				} else if (mode.equals(MODE_RELOAD)) {
+					if (adapter != null) {
+						final HTMLParser parser = new HTMLParser(content);
+						final ArrayList<Course> courses = parser.getCourses();
+						Collections.sort(courses);
+
+						if (courses.size() > 0) {
+							// find the latest courses and set adapter
+							final Course latest = courses.get(0);
+							final ArrayList<Course> latestCourses = new ArrayList<>();
+							for (Course course : courses) {
+								if (course.getCourseYear() == latest.getCourseYear() &&
+										course.getSemester().equals(latest.getSemester()))
+									latestCourses.add(course);
+							}
+							adapter.setLatestCourses(latestCourses);
+
+							// debug info
+							for (Course c : latestCourses) {
+								System.out.println(c.toString());
+							}
+						}
 					}
 				}
 				break;

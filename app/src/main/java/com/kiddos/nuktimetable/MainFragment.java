@@ -2,22 +2,21 @@ package com.kiddos.nuktimetable;
 
 import android.app.*;
 import android.content.*;
-import android.graphics.Color;
-import android.net.Uri;
+import android.graphics.*;
 import android.os.*;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import java.io.*;
 import java.util.*;
-import java.net.*;
 
 public class MainFragment extends Fragment {
 	public static final String KEY_CONTENT = "content";
+	private ScheduleAdapter adapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		setHasOptionsMenu(true);
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		final GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
 
@@ -37,7 +36,8 @@ public class MainFragment extends Fragment {
 							course.getSemester().equals(latest.getSemester()))
 						latestCourses.add(course);
 				}
-				schedule.setAdapter(new ScheduleAdapter(getActivity(), latestCourses));
+				adapter = new ScheduleAdapter(getActivity(), latestCourses);
+				schedule.setAdapter(adapter);
 
 				// debug info
 				for (Course c : latestCourses) {
@@ -50,7 +50,21 @@ public class MainFragment extends Fragment {
 		return rootView;
 	}
 
-	private class ScheduleAdapter extends BaseAdapter {
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		if (id == R.id.action_reload) {
+			Log.i("onOptionsItemSelected", "reload");
+			final SharedPreferences prefs = getActivity().
+					getSharedPreferences(LoginFragment.PREFERENCE, Context.MODE_PRIVATE);
+			final String username = prefs.getString(LoginFragment.KEY_USERNAME, "");
+			final String password = prefs.getString(LoginFragment.KEY_PASSWORD, "");
+			new RetrieveTask(getActivity(), adapter).execute(username, password);
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public class ScheduleAdapter extends BaseAdapter {
 		private static final int NUM_COL = 6;
 		private static final int NUM_ROW = 15;
 		private static final int TOTAL_ITEMS = NUM_COL * NUM_ROW;
@@ -58,13 +72,31 @@ public class MainFragment extends Fragment {
 		private static final String NON_EMPTY_TAG = "non empty";
 		private int[] layoutId = new int[TOTAL_ITEMS];
 		private Context context;
+		private ArrayList<Course> latestCourses;
 		private Course[] courses = new Course[TOTAL_ITEMS];
 		private int colorSeq = 0;
 
 		public ScheduleAdapter(Context context, ArrayList<Course> latestCourses) {
 			this.context = context;
+			this.latestCourses = latestCourses;
 
-			for (int i = 0 ; i < TOTAL_ITEMS ; i ++) {
+			setup();
+
+			// debug usage
+//			for (int i = 0 ; i < courses.length ; i ++) {
+//				Course course = courses[i];
+//				if (i % 6 == 0) {
+//					System.out.println("time");
+//				}
+//				if (course != null)
+//					System.out.print(course.getCourseName());
+//				else
+//					System.out.print("null");
+//			}
+		}
+
+		private void setup() {
+			for (int i = 0; i < TOTAL_ITEMS; i++) {
 				if (i % 6 == 0) {
 					layoutId[i] = R.layout.block_item;
 				} else {
@@ -130,17 +162,6 @@ public class MainFragment extends Fragment {
 					courses[index] = course;
 				}
 			}
-
-//			for (int i = 0 ; i < courses.length ; i ++) {
-//				Course course = courses[i];
-//				if (i % 6 == 0) {
-//					System.out.println("time");
-//				}
-//				if (course != null)
-//					System.out.print(course.getCourseName());
-//				else
-//					System.out.print("null");
-//			}
 		}
 
 		private int getColorSeq() {
@@ -173,6 +194,12 @@ public class MainFragment extends Fragment {
 				}
 			}
 			return true;
+		}
+
+		public void setLatestCourses(ArrayList<Course> latestCourses) {
+			this.latestCourses = latestCourses;
+
+			setup();
 		}
 
 		@Override
@@ -351,5 +378,6 @@ public class MainFragment extends Fragment {
 			}
 			return convertView;
 		}
+
 	}
 }
