@@ -62,7 +62,7 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 			dialog.setMessage(context.getResources().getString(R.string.verifying));
 			dialog.show();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.i("onPreExecute", "Main UI is hidden");
 		}
 	}
 
@@ -203,7 +203,7 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 		try {
 			if (dialog != null) dialog.dismiss();
 		} catch (Exception e) {
-			e.printStackTrace();
+			Log.i("onPostExecute", "Main UI is hidden");
 		}
 	}
 }

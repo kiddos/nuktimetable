@@ -1,9 +1,10 @@
 package com.kiddos.nuktimetable;
 
 import android.app.*;
-import android.content.Context;
+import android.content.*;
 import android.content.SharedPreferences;
 import android.os.*;
+import android.util.Log;
 import android.view.*;
 
 public class MainActivity extends Activity implements OnLoginListener {
@@ -13,6 +14,7 @@ public class MainActivity extends Activity implements OnLoginListener {
 	private Fragment loginFragment;
 	private Fragment mainFragment;
 	private Handler handler;
+	private FragmentManager fragmentManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,18 +22,19 @@ public class MainActivity extends Activity implements OnLoginListener {
 		setContentView(R.layout.activity_main);
 
 		handler = new Handler();
-		setDisplayActionBar(false);
 
 		if (savedInstanceState != null) {
+			Log.i("onCreate", "data exist");
 			setDisplayActionBar(true);
 			return;
 		}
+		setDisplayActionBar(false);
 
-		FragmentManager manager = this.getFragmentManager();
 		loginFragment = new LoginFragment();
 		mainFragment = new MainFragment();
 
-		SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+		fragmentManager = this.getFragmentManager();
+		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 		boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
 		if (lastSuccess) {
 			setDisplayActionBar(true);
@@ -40,10 +43,31 @@ public class MainActivity extends Activity implements OnLoginListener {
 			arg.putString(MainFragment.KEY_CONTENT, data);
 
 			mainFragment.setArguments(arg);
-			manager.beginTransaction().add(R.id.container, mainFragment).commit();
+			fragmentManager.beginTransaction().replace(R.id.container, mainFragment).commit();
 		} else {
-			manager.beginTransaction().add(R.id.container, loginFragment).commit();
+			setDisplayActionBar(false);
+			fragmentManager.beginTransaction().replace(R.id.container, loginFragment).commit();
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+//		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+//		boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
+//		if (lastSuccess) {
+//			setDisplayActionBar(true);
+//			String data = prefs.getString(KEY_DATA, "");
+//			Bundle arg = new Bundle();
+//			arg.putString(MainFragment.KEY_CONTENT, data);
+//
+//			mainFragment.setArguments(arg);
+//			fragmentManager.beginTransaction().replace(R.id.container, mainFragment).commit();
+//		} else {
+//			setDisplayActionBar(false);
+//			fragmentManager.beginTransaction().replace(R.id.container, loginFragment).commit();
+//		}
 	}
 
 	private void setDisplayActionBar(final boolean display) {
@@ -83,7 +107,7 @@ public class MainActivity extends Activity implements OnLoginListener {
 	@Override
 	public void onLogin(String webContent) {
 		// store the data in preference
-		SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 		prefs.edit().putString(KEY_DATA, webContent).putBoolean(KEY_LOGIN_SUCCESS, true).apply();
 
 		// display the action bar
