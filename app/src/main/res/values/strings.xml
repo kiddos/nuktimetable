@@ -22,6 +22,7 @@
 	<string name="fail">Fail</string>
 	<string name="login_fail">Login Fail</string>
 	<string name="wrong_username_password">Wrong Username/Password</string>
+	<string name="conntection_timeout">Connection Timeout. Check your Internet Connection</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>

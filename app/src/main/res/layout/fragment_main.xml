@@ -19,9 +19,11 @@
 				android:layout_height="wrap_content"
 				android:layout_marginRight="6dp"
 				android:layout_marginEnd="6dp"
+				style="@style/RowItemStyle"
+				android:paddingLeft="0dp"
+				android:paddingRight="0dp"
 				android:layout_column="0"
 				android:gravity="center"
-				style="@style/RowItemStyle"
 				android:text="@string/time_period"/>
 		<TextView
 				android:layout_width="wrap_content"

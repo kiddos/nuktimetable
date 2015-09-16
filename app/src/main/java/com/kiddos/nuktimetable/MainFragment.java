@@ -2,6 +2,7 @@ package com.kiddos.nuktimetable;
 
 import android.app.*;
 import android.content.*;
+import android.graphics.Color;
 import android.os.*;
 import android.view.*;
 import android.widget.*;
@@ -17,16 +18,16 @@ public class MainFragment extends Fragment {
 		final GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
 
 		try {
-			Bundle arg = getArguments();
-			String content = arg.getString(KEY_CONTENT, "");
-			HTMLParser parser = new HTMLParser(content);
-			ArrayList<Course> courses = parser.getCourses();
+			final Bundle arg = getArguments();
+			final String content = arg.getString(KEY_CONTENT, "");
+			final HTMLParser parser = new HTMLParser(content);
+			final ArrayList<Course> courses = parser.getCourses();
 			Collections.sort(courses);
 
 			if (courses.size() > 0) {
 				// find the latest courses and set adapter
-				Course latest = courses.get(0);
-				ArrayList<Course> latestCourses = new ArrayList<>();
+				final Course latest = courses.get(0);
+				final ArrayList<Course> latestCourses = new ArrayList<>();
 				for (Course course : courses) {
 					if (course.getCourseYear() == latest.getCourseYear() &&
 							course.getSemester().equals(latest.getSemester()))
@@ -139,13 +140,14 @@ public class MainFragment extends Fragment {
 		}
 
 		private int getColorSeq() {
-			int[] seq = {R.color.red,
-					R.color.orange,
-					R.color.yellow,
-					R.color.green,
-					R.color.blue,
-					R.color.teal,
-					R.color.purple
+			int[] seq = {
+					Color.rgb(254, 46, 46),		// red
+					Color.rgb(250, 154, 45),	// orange
+					Color.rgb(230, 208, 13),	// yellow
+					Color.rgb(39, 192, 39),		// green
+					Color.rgb(88, 172, 250),	// blue
+					Color.rgb(1, 192, 184),		// teal
+					Color.rgb(173, 116, 229),	// purple
 			};
 
 			int color = seq[colorSeq];
@@ -339,7 +341,7 @@ public class MainFragment extends Fragment {
 						// set all the views
 						if (className != null) className.setText(course.getCourseName());
 						if (classroom != null) classroom.setText(course.getClassroom());
-						if (background != null) background.setBackgroundColor(getResources().getColor(course.getColor()));
+						if (background != null) background.setBackgroundColor(course.getColor());
 					}
 				}
 			}

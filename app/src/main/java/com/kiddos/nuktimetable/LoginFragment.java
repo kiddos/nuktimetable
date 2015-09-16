@@ -10,13 +10,12 @@ import android.view.*;
 import android.widget.*;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.net.*;
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
 	public static final String CONTENT_URL = "http://elearning.nuk.edu.tw/m_student/m_stu_index.php";
 	public static final String LOGIN_URL = "http://stu.nuk.edu.tw/GEC/login_at2.asp";
-	public static final String PREFERENCE = "prefs";
+	public static final String PREFERENCE = "com.kiddos.nuktimetable.prefs";
 	public static final String KEY_USERNAME = "username";
 	public static final String KEY_PASSWORD = "password";
 	private static final String USERNAME = "stuid";
@@ -35,7 +34,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View rootView = inflater.inflate(R.layout.fragment_login, container, false);
+		final View rootView = inflater.inflate(R.layout.fragment_login, container, false);
 		username = (EditText) rootView.findViewById(R.id.etUserName);
 		password = (EditText) rootView.findViewById(R.id.etPassword);
 		errorMsg = (TextView) rootView.findViewById(R.id.tvErrorMsg);
@@ -47,9 +46,10 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 		clear.setOnClickListener(this);
 
 		// set initial login username/password if existed
-		SharedPreferences prefs = getActivity().getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-		String un = prefs.getString(KEY_USERNAME, "");
-		String pw = prefs.getString(KEY_PASSWORD, "");
+		final SharedPreferences prefs = getActivity().
+				getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+		final String un = prefs.getString(KEY_USERNAME, "");
+		final String pw = prefs.getString(KEY_PASSWORD, "");
 		username.setText(un);
 		password.setText(pw);
 
@@ -57,13 +57,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 	}
 
 	private boolean isConnectingOrConnected() {
-		WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
-		ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().
+		final WifiManager wifiManager = (WifiManager) getActivity().getSystemService(Context.WIFI_SERVICE);
+		final ConnectivityManager connectivityManager = (ConnectivityManager) getActivity().
 				getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo mobileInfo = connectivityManager.getActiveNetworkInfo();
-		if (wifiManager.isWifiEnabled()) {
+		final NetworkInfo mobileInfo = connectivityManager.getActiveNetworkInfo();
+		if (wifiManager != null && wifiManager.isWifiEnabled()) {
 			return true;
-		} else if (mobileInfo.isConnectedOrConnecting()) {
+		} else if (mobileInfo != null && mobileInfo.isConnectedOrConnecting()) {
 			return true;
 		}
 		return false;
@@ -93,6 +93,11 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				}
 				final String username = this.username.getText().toString();
 				final String password = this.password.getText().toString();
+
+				final SharedPreferences prefs = getActivity().
+						getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+				prefs.edit().putString(KEY_USERNAME, username).
+						putString(KEY_PASSWORD, password).apply();
 
 				new LoginTask().execute(username, password);
 				break;
@@ -159,7 +164,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 					return RESULT_WRONG_CREDENTIALS;
 				}
 
-				String cookies = connection.getHeaderField("Set-Cookie");
+				final String cookies = connection.getHeaderField("Set-Cookie");
 				url = new URL(CONTENT_URL);
 				connection = (HttpURLConnection) url.openConnection();
 				connection.setConnectTimeout(CONNECTION_TIMEOUT);
@@ -180,8 +185,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				return content.toString();
 			} catch (IOException e) {
 				e.printStackTrace();
+				return RESULT_EXCEPTION_OCCUR;
 			}
-			return RESULT_EXCEPTION_OCCUR;
 		}
 
 		@Override
@@ -192,6 +197,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 					dialog.setMessage(getResources().getString(R.string.login_fail));
 					break;
 				case RESULT_EXCEPTION_OCCUR:
+					errorMsg.setText(getResources().getString(R.string.conntection_timeout));
 					dialog.setMessage(getResources().getString(R.string.fail));
 					break;
 				default:
