@@ -3,11 +3,15 @@ package com.kiddos.nuktimetable;
 import android.app.*;
 import android.content.*;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.*;
+import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
+import java.io.*;
 import java.util.*;
+import java.net.*;
 
 public class MainFragment extends Fragment {
 	public static final String KEY_CONTENT = "content";
