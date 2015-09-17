@@ -2,9 +2,7 @@ package com.kiddos.nuktimetable;
 
 import android.app.*;
 import android.content.*;
-import android.content.SharedPreferences;
 import android.os.*;
-import android.util.Log;
 import android.view.*;
 
 public class MainActivity extends Activity implements OnLoginListener {
@@ -19,20 +17,18 @@ public class MainActivity extends Activity implements OnLoginListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Log.i("MainAcitivity", "onCreate");
 
 		handler = new Handler();
 
 		if (savedInstanceState != null) {
-			Log.i("onCreate", "data exist");
-
+			// get the login success status
+			// to decide rather to show actionbar
 			final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 			boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
 			if (lastSuccess) setDisplayActionBar(true);
 			else setDisplayActionBar(false);
 			return;
 		}
-
 
 		loginFragment = new LoginFragment();
 		mainFragment = new MainFragment();
@@ -54,12 +50,6 @@ public class MainActivity extends Activity implements OnLoginListener {
 		}
 	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		Log.i("MainAcitivity", "onResume");
-	}
-
 	private void setDisplayActionBar(final boolean display) {
 		handler.post(new Runnable() {
 			@Override
@@ -75,7 +65,6 @@ public class MainActivity extends Activity implements OnLoginListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.i("MainAcitivity", "onCreateOptionMenu");
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
