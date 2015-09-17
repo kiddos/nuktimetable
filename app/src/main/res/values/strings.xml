@@ -23,7 +23,7 @@
 	<string name="reload_fail">Reload Fail</string>
 	<string name="wrong_username_password">Wrong Username/Password</string>
 	<string name="conntection_timeout">Connection Timeout. Check your Internet Connection</string>
-	<string name="version">v0.3.0</string>
+	<string name="version">v0.6.0</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>
