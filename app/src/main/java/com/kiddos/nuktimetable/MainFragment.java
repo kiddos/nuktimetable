@@ -265,13 +265,14 @@ public class MainFragment extends Fragment {
 
 		private int getColorSeq() {
 			int[] seq = {
-					Color.rgb(254, 46, 46),		// red
-					Color.rgb(250, 154, 45),	// orange
-					Color.rgb(230, 208, 13),	// yellow
+					Color.rgb(250, 67, 67),		// red
+					Color.rgb(255, 182, 53),	// orange
+					Color.rgb(255, 213, 0),		// yellow
 					Color.rgb(39, 192, 39),		// green
 					Color.rgb(88, 172, 250),	// blue
 					Color.rgb(1, 192, 184),		// teal
 					Color.rgb(173, 116, 229),	// purple
+					Color.rgb(238, 89, 218)		// pink
 			};
 
 			int color = seq[colorSeq];

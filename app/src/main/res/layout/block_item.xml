@@ -4,8 +4,8 @@
 			  android:layout_width="fill_parent"
 			  android:layout_height="@dimen/item_height"
 			  android:layout_weight="1"
-			  android:paddingTop="1dp"
-			  android:paddingBottom="1dp"
+			  android:paddingTop="@dimen/small_padding"
+			  android:paddingBottom="@dimen/small_padding"
 			  android:background="@color/empty">
 
 	<LinearLayout
