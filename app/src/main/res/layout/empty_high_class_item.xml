@@ -14,8 +14,6 @@
 			android:background="#FFFFFF"
 			android:paddingTop="10dp"
 			android:paddingBottom="10dp"
-			android:paddingLeft="3dp"
-			android:paddingRight="3dp"
 			android:orientation="vertical"
 			android:gravity="center">
 	</LinearLayout>

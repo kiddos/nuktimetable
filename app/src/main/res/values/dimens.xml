@@ -5,4 +5,5 @@
 	<dimen name="item_height">130dp</dimen>
 	<dimen name="empty_item_height">30dp</dimen>
 	<dimen name="small_padding">1dp</dimen>
+	<dimen name="internal_padding">2dp</dimen>
 </resources>
