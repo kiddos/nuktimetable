@@ -12,13 +12,17 @@ import java.util.*;
 
 public class MainFragment extends Fragment {
 	public static final String KEY_CONTENT = "content";
-	private ScheduleAdapter adapter;
+	private GridView weekday;
+	private GridView schedule;
+	private WeekdayAdapter weekdayAdapter;
+	private ScheduleAdapter scheduleAdapter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		final GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
+		weekday = (GridView) rootView.findViewById(R.id.gvWeekday);
+		schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
 
 		try {
 			final Bundle arg = getArguments();
@@ -36,8 +40,19 @@ public class MainFragment extends Fragment {
 							course.getSemester().equals(latest.getSemester()))
 						latestCourses.add(course);
 				}
-				adapter = new ScheduleAdapter(getActivity(), latestCourses);
-				schedule.setAdapter(adapter);
+				if (hasSaturdayCourse(latestCourses)) {
+					schedule.setNumColumns(7);
+					scheduleAdapter = new ScheduleAdapter(getActivity(), latestCourses, 7);
+					weekday.setNumColumns(7);
+					weekdayAdapter = new WeekdayAdapter(getActivity(), 7);
+				} else {
+					schedule.setNumColumns(6);
+					scheduleAdapter = new ScheduleAdapter(getActivity(), latestCourses, 6);
+					weekday.setNumColumns(6);
+					weekdayAdapter = new WeekdayAdapter(getActivity(), 6);
+				}
+				schedule.setAdapter(scheduleAdapter);
+				weekday.setAdapter(weekdayAdapter);
 
 				// debug info
 				for (Course c : latestCourses) {
@@ -50,42 +65,124 @@ public class MainFragment extends Fragment {
 		return rootView;
 	}
 
+	private boolean hasSaturdayCourse(ArrayList<Course> courses) {
+		for (Course course : courses) {
+			if (course.getWeekDay() == 6) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_reload) {
 			Log.i("onOptionsItemSelected", "reload");
+
+			// get the store username / password
 			final SharedPreferences prefs = getActivity().
 					getSharedPreferences(LoginFragment.PREFERENCE, Context.MODE_PRIVATE);
+
 			final String username = prefs.getString(LoginFragment.KEY_USERNAME, "");
 			final String password = prefs.getString(LoginFragment.KEY_PASSWORD, "");
-			new RetrieveTask(getActivity(), adapter).execute(username, password);
+
+			// reload task
+			new RetrieveTask(getActivity(), scheduleAdapter).execute(username, password);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
+	public class WeekdayAdapter extends BaseAdapter {
+		private final int NUM_DAYS;
+		private Context context;
+
+		public WeekdayAdapter(Context context, final int numDays) {
+			this.NUM_DAYS = numDays;
+			this.context = context;
+		}
+
+		@Override
+		public int getCount() {
+			return NUM_DAYS;
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return position;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			if (convertView == null) {
+				LayoutInflater inflater = LayoutInflater.from(context);
+				convertView = inflater.inflate(R.layout.week_day_item, parent, false);
+			}
+
+			final TextView tvWeekdayItem = (TextView) convertView.findViewById(R.id.tvWeekdayItem);
+			switch (position) {
+				case 0:
+					tvWeekdayItem.setText(getResources().getString(R.string.time_period));
+					tvWeekdayItem.setGravity(Gravity.CENTER);
+					break;
+				case 1:
+					tvWeekdayItem.setText(getResources().getString(R.string.monday_abbr));
+					break;
+				case 2:
+					tvWeekdayItem.setText(getResources().getString(R.string.tuesday_abbr));
+					break;
+				case 3:
+					tvWeekdayItem.setText(getResources().getString(R.string.wednesday_abbr));
+					break;
+				case 4:
+					tvWeekdayItem.setText(getResources().getString(R.string.thursday_abbr));
+					break;
+				case 5:
+					tvWeekdayItem.setText(getResources().getString(R.string.friday_abbr));
+					break;
+				case 6:
+					tvWeekdayItem.setText(getResources().getString(R.string.saturday_abbr));
+					break;
+				case 7:
+					tvWeekdayItem.setText(getResources().getString(R.string.sunday));
+					break;
+			}
+			return convertView;
+		}
+	}
+
+
 	public class ScheduleAdapter extends BaseAdapter {
-		private static final int NUM_COL = 6;
 		private static final int NUM_ROW = 15;
-		private static final int TOTAL_ITEMS = NUM_COL * NUM_ROW;
 		private static final String EMPTY_TAG = "empty";
 		private static final String NON_EMPTY_TAG = "non empty";
-		private int[] layoutId = new int[TOTAL_ITEMS];
+		private int NUM_COL;
+		private int TOTAL_ITEMS;
+		private int[] layoutId;
 		private Context context;
 		private ArrayList<Course> latestCourses;
-		private Course[] courses = new Course[TOTAL_ITEMS];
+		private Course[] courses;
 		private int colorSeq = 0;
 
-		public ScheduleAdapter(Context context, ArrayList<Course> latestCourses) {
+		public ScheduleAdapter(Context context, ArrayList<Course> latestCourses, final int numcol) {
 			this.context = context;
 			this.latestCourses = latestCourses;
+			this.NUM_COL = numcol;
+			this.TOTAL_ITEMS = NUM_COL * NUM_ROW;
+			this.layoutId = new int[TOTAL_ITEMS];
+			this.courses = new Course[TOTAL_ITEMS];
 
 			setup();
 
 			// debug usage
 //			for (int i = 0 ; i < courses.length ; i ++) {
 //				Course course = courses[i];
-//				if (i % 6 == 0) {
+//				if (i % NUM_COL == 0) {
 //					System.out.println("time");
 //				}
 //				if (course != null)
@@ -97,7 +194,7 @@ public class MainFragment extends Fragment {
 
 		private void setup() {
 			for (int i = 0; i < TOTAL_ITEMS; i++) {
-				if (i % 6 == 0) {
+				if (i % NUM_COL == 0) {
 					layoutId[i] = R.layout.block_item;
 				} else {
 					layoutId[i] = R.layout.class_item;
@@ -266,7 +363,7 @@ public class MainFragment extends Fragment {
 						final TextView time1 = (TextView) convertView.findViewById(R.id.tvTime1);
 						final TextView time2 = (TextView) convertView.findViewById(R.id.tvTime2);
 						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
-						switch (position / 6) {
+						switch (position / NUM_COL) {
 							case 0:
 								time1.setText(getResources().getString(R.string.timex_1));
 								time2.setText(getResources().getString(R.string.timex_2));
@@ -346,7 +443,7 @@ public class MainFragment extends Fragment {
 					} else if (convertView.getTag().equals(EMPTY_TAG)) {
 						// shorten block item
 						final TextView block = (TextView) convertView.findViewById(R.id.tvBlock);
-						switch (position / 6) {
+						switch (position / NUM_COL) {
 							case 0: block.setText(getResources().getString(R.string.blockx)); break;
 							case 1: block.setText(getResources().getString(R.string.block1)); break;
 							case 2: block.setText(getResources().getString(R.string.block2)); break;
