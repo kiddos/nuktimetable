@@ -12,8 +12,6 @@ import java.util.*;
 
 public class MainFragment extends Fragment {
 	public static final String KEY_CONTENT = "content";
-	private GridView weekday;
-	private GridView schedule;
 	private WeekdayAdapter weekdayAdapter;
 	private ScheduleAdapter scheduleAdapter;
 
@@ -21,8 +19,8 @@ public class MainFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		weekday = (GridView) rootView.findViewById(R.id.gvWeekday);
-		schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
+		final GridView weekday = (GridView) rootView.findViewById(R.id.gvWeekday);
+		final GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
 
 		try {
 			final Bundle arg = getArguments();
@@ -65,7 +63,7 @@ public class MainFragment extends Fragment {
 		return rootView;
 	}
 
-	private boolean hasSaturdayCourse(ArrayList<Course> courses) {
+	public static boolean hasSaturdayCourse(ArrayList<Course> courses) {
 		for (Course course : courses) {
 			if (course.getWeekDay() == 6) {
 				return true;
@@ -88,18 +86,23 @@ public class MainFragment extends Fragment {
 			final String password = prefs.getString(LoginFragment.KEY_PASSWORD, "");
 
 			// reload task
-			new RetrieveTask(getActivity(), scheduleAdapter).execute(username, password);
+			new RetrieveTask(getActivity(), weekdayAdapter, scheduleAdapter).
+					execute(username, password);
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 	public class WeekdayAdapter extends BaseAdapter {
-		private final int NUM_DAYS;
+		private int NUM_DAYS;
 		private Context context;
 
 		public WeekdayAdapter(Context context, final int numDays) {
 			this.NUM_DAYS = numDays;
 			this.context = context;
+		}
+
+		public void setNumDays(final int numDays) {
+			this.NUM_DAYS = numDays;
 		}
 
 		@Override
@@ -155,7 +158,6 @@ public class MainFragment extends Fragment {
 			return convertView;
 		}
 	}
-
 
 	public class ScheduleAdapter extends BaseAdapter {
 		private static final int NUM_ROW = 15;
@@ -293,8 +295,12 @@ public class MainFragment extends Fragment {
 			return true;
 		}
 
-		public void setLatestCourses(ArrayList<Course> latestCourses) {
+		public void setLatestCourses(ArrayList<Course> latestCourses, final int numCol) {
 			this.latestCourses = latestCourses;
+			this.NUM_COL = numCol;
+			this.TOTAL_ITEMS = this.NUM_COL * NUM_ROW;
+			this.layoutId = new int[TOTAL_ITEMS];
+			this.courses = new Course[TOTAL_ITEMS];
 
 			setup();
 		}

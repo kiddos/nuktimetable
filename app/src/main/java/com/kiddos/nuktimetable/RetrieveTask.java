@@ -33,7 +33,8 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	private TextView errorMsg;
 	private String mode;
 	private OnLoginListener handler;
-	private MainFragment.ScheduleAdapter adapter;
+	private MainFragment.ScheduleAdapter scheduleAdapter;
+	private MainFragment.WeekdayAdapter weekdayAdapter;
 
 	public RetrieveTask(Context context, final OnLoginListener handler, final TextView errorMsg) {
 		this.context = context;
@@ -43,9 +44,12 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 		this.mode = MODE_LOGIN;
 	}
 
-	public RetrieveTask(final Context context, final MainFragment.ScheduleAdapter adapter) {
+	public RetrieveTask(final Context context,
+						final MainFragment.WeekdayAdapter weekdayAdapter,
+						final MainFragment.ScheduleAdapter scheduleAdapter) {
 		this.context = context;
-		this.adapter = adapter;
+		this.weekdayAdapter = weekdayAdapter;
+		this.scheduleAdapter = scheduleAdapter;
 
 		this.mode = MODE_RELOAD;
 	}
@@ -171,9 +175,10 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 						}
 					}
 				} else if (mode.equals(MODE_RELOAD)) {
-					if (adapter != null) {
+					if (scheduleAdapter != null) {
 						final HTMLParser parser = new HTMLParser(content);
 						final ArrayList<Course> courses = parser.getCourses();
+						// sort according to year and semester
 						Collections.sort(courses);
 
 						if (courses.size() > 0) {
@@ -185,7 +190,14 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 										course.getSemester().equals(latest.getSemester()))
 									latestCourses.add(course);
 							}
-							adapter.setLatestCourses(latestCourses);
+
+							// update adapter
+							if (MainFragment.hasSaturdayCourse(latestCourses)) {
+								weekdayAdapter.setNumDays(7);
+								weekdayAdapter.notifyDataSetChanged();
+								scheduleAdapter.setLatestCourses(latestCourses, 7);
+								scheduleAdapter.notifyDataSetChanged();
+							}
 
 							// debug info
 							for (Course c : latestCourses) {

@@ -10,7 +10,6 @@
 	<string name="clear">Clear</string>
 	<string name="creator">Creator: Joseph Yu</string>
 	<string name="author">Joseph Yu</string>
-	<string name="version">v0.2.1</string>
 	<string name="title_activity_main">MainActivity</string>
 	<string name="hello_world">Hello world!</string>
 	<string name="username_missing">Username missing</string>
@@ -24,6 +23,7 @@
 	<string name="reload_fail">Reload Fail</string>
 	<string name="wrong_username_password">Wrong Username/Password</string>
 	<string name="conntection_timeout">Connection Timeout. Check your Internet Connection</string>
+	<string name="version">v0.3.0</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>
