@@ -1,11 +1,11 @@
 package com.kiddos.nuktimetable;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.app.*;
+import android.content.*;
+import android.net.*;
+import android.os.*;
 import android.util.Log;
-import android.widget.TextView;
+import android.widget.*;
 
 import java.io.*;
 import java.net.*;
@@ -33,6 +33,7 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	private TextView errorMsg;
 	private String mode;
 	private OnLoginListener handler;
+	private GridView weekday, schedule;
 	private MainFragment.ScheduleAdapter scheduleAdapter;
 	private MainFragment.WeekdayAdapter weekdayAdapter;
 
@@ -45,9 +46,13 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	}
 
 	public RetrieveTask(final Context context,
+						final GridView weekday,
+						final GridView schedule,
 						final MainFragment.WeekdayAdapter weekdayAdapter,
 						final MainFragment.ScheduleAdapter scheduleAdapter) {
 		this.context = context;
+		this.weekday = weekday;
+		this.schedule = schedule;
 		this.weekdayAdapter = weekdayAdapter;
 		this.scheduleAdapter = scheduleAdapter;
 
@@ -193,9 +198,18 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 
 							// update adapter
 							if (MainFragment.hasSaturdayCourse(latestCourses)) {
+								weekday.setNumColumns(7);
 								weekdayAdapter.setNumDays(7);
 								weekdayAdapter.notifyDataSetChanged();
+								schedule.setNumColumns(7);
 								scheduleAdapter.setLatestCourses(latestCourses, 7);
+								scheduleAdapter.notifyDataSetChanged();
+							} else {
+								weekday.setNumColumns(6);
+								weekdayAdapter.setNumDays(6);
+								weekdayAdapter.notifyDataSetChanged();
+								schedule.setNumColumns(6);
+								scheduleAdapter.setLatestCourses(latestCourses, 6);
 								scheduleAdapter.notifyDataSetChanged();
 							}
 

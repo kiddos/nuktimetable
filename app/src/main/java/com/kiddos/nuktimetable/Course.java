@@ -87,6 +87,7 @@ public class Course implements Serializable, Comparable<Course> {
 
 			int endBracket = blocks.indexOf(')');
 			String tb = blocks.substring(endBracket + 1);
+			if (!tb.startsWith("_")) tb = "_" + tb;
 			String[] data = tb.split("_");
 			String[] timeBlocks = new String[data.length -1];
 			for (int i = 1 ; i < data.length ; i ++) {

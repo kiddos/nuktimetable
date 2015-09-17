@@ -8,10 +8,13 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class MainFragment extends Fragment {
 	public static final String KEY_CONTENT = "content";
+	private GridView weekday, schedule;
 	private WeekdayAdapter weekdayAdapter;
 	private ScheduleAdapter scheduleAdapter;
 
@@ -19,10 +22,21 @@ public class MainFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setHasOptionsMenu(true);
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-		final GridView weekday = (GridView) rootView.findViewById(R.id.gvWeekday);
-		final GridView schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
+		weekday = (GridView) rootView.findViewById(R.id.gvWeekday);
+		schedule = (GridView) rootView.findViewById(R.id.gvSchedule);
 
 		try {
+			// testing
+//			BufferedReader reader = new BufferedReader(new InputStreamReader(
+//					getResources().openRawResource(R.raw.test), "UTF-8"));
+//			StringBuilder builder = new StringBuilder();
+//			String line;
+//			while ((line = reader.readLine()) != null) {
+//				builder.append(line).append('\n');
+//			}
+//			reader.close();
+//			final String content = builder.toString();
+
 			final Bundle arg = getArguments();
 			final String content = arg.getString(KEY_CONTENT, "");
 			final HTMLParser parser = new HTMLParser(content);
@@ -86,7 +100,7 @@ public class MainFragment extends Fragment {
 			final String password = prefs.getString(LoginFragment.KEY_PASSWORD, "");
 
 			// reload task
-			new RetrieveTask(getActivity(), weekdayAdapter, scheduleAdapter).
+			new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter, scheduleAdapter).
 					execute(username, password);
 		}
 		return super.onOptionsItemSelected(item);
@@ -266,7 +280,7 @@ public class MainFragment extends Fragment {
 		private int getColorSeq() {
 			int[] seq = {
 					Color.rgb(250, 67, 67),		// red
-					Color.rgb(255, 182, 53),	// orange
+					Color.rgb(255, 155, 68),	// orange
 					Color.rgb(255, 213, 0),		// yellow
 					Color.rgb(39, 192, 39),		// green
 					Color.rgb(88, 172, 250),	// blue
