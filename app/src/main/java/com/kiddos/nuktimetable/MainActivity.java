@@ -19,15 +19,20 @@ public class MainActivity extends Activity implements OnLoginListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		Log.i("MainAcitivity", "onCreate");
 
 		handler = new Handler();
 
 		if (savedInstanceState != null) {
 			Log.i("onCreate", "data exist");
-			setDisplayActionBar(true);
+
+			final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+			boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
+			if (lastSuccess) setDisplayActionBar(true);
+			else setDisplayActionBar(false);
 			return;
 		}
-		setDisplayActionBar(false);
+
 
 		loginFragment = new LoginFragment();
 		mainFragment = new MainFragment();
@@ -49,6 +54,12 @@ public class MainActivity extends Activity implements OnLoginListener {
 		}
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Log.i("MainAcitivity", "onResume");
+	}
+
 	private void setDisplayActionBar(final boolean display) {
 		handler.post(new Runnable() {
 			@Override
@@ -64,6 +75,7 @@ public class MainActivity extends Activity implements OnLoginListener {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		Log.i("MainAcitivity", "onCreateOptionMenu");
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
@@ -72,6 +84,11 @@ public class MainActivity extends Activity implements OnLoginListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_logout) {
+			// set login to false
+			// allow user to login again and for the next start up
+			final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+			prefs.edit().putBoolean(KEY_LOGIN_SUCCESS, false).apply();
+
 			setDisplayActionBar(false);
 			if (loginFragment == null) {
 				loginFragment = new LoginFragment();
