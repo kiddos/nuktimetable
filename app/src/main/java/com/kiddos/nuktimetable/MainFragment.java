@@ -8,8 +8,6 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.*;
 
 public class MainFragment extends Fragment {
