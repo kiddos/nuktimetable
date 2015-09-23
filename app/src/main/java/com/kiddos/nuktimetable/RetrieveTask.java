@@ -160,10 +160,10 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 				break;
 			case RESULT_EXCEPTION_OCCUR:
 				if (mode.equals(MODE_LOGIN)) {
-					errorMsg.setText(context.getResources().getString(R.string.conntection_timeout));
+					errorMsg.setText(context.getResources().getString(R.string.connection_timeout));
 					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.fail));
 				} else if (mode.equals(MODE_RELOAD)){
-					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.conntection_timeout));
+					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.connection_timeout));
 				}
 				break;
 			default:

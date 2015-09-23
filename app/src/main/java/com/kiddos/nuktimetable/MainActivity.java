@@ -9,8 +9,7 @@ public class MainActivity extends Activity implements OnLoginListener {
 	public static final String PREFERENCE = "main_prefs";
 	public static final String KEY_DATA = "data";
 	public static final String KEY_LOGIN_SUCCESS = "login";
-	private Fragment loginFragment;
-	private Fragment mainFragment;
+	private Fragment loginFragment, mainFragment;
 	private Handler handler;
 
 	@Override
@@ -85,6 +84,26 @@ public class MainActivity extends Activity implements OnLoginListener {
 			getFragmentManager().beginTransaction().
 					replace(R.id.container, loginFragment).commit();
 			return true;
+		} else if (id == R.id.action_info) {
+			try {
+				final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setTitle(getResources().getString(R.string.info));
+				builder.setMessage(getResources().getString(R.string.info_message));
+				builder.setPositiveButton(getResources().getString(R.string.ok), null);
+				builder.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else if (id == R.id.action_about) {
+			try {
+				final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setTitle(getResources().getString(R.string.about));
+				builder.setMessage(getResources().getString(R.string.about_message));
+				builder.setPositiveButton(getResources().getString(R.string.ok), null);
+				builder.show();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}

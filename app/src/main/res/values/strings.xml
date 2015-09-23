@@ -5,6 +5,8 @@
 	<string name="password">Password:</string>
 	<string name="action_logout">Logout</string>
 	<string name="action_reload">Reload</string>
+	<string name="action_about">About</string>
+	<string name="action_info">Info</string>
 	<string name="login">Login</string>
 	<string name="exit">Exit</string>
 	<string name="clear">Clear</string>
@@ -22,7 +24,20 @@
 	<string name="login_fail">Login Fail</string>
 	<string name="reload_fail">Reload Fail</string>
 	<string name="wrong_username_password">Wrong Username/Password</string>
-	<string name="conntection_timeout">Connection Timeout. Check your Internet Connection</string>
+	<string name="connection_timeout">Connection Timeout. Check your Internet Connection</string>
+	<string name="ok">OK</string>
+	<string name="info">Information</string>
+	<string name="info_message">B01: 綜合大樓
+								\nC01: 工學院
+								\nC02: 理學院
+								\nH1-H2: 人文社會科學院
+								\nK01: 體育健康休閒大樓
+								\nL01: 圖書資訊大樓
+								\nL02: 法學院
+								</string>
+	<string name="about">About</string>
+	<string name="about_message">This Application is made a student in National University of Kaohsiung.
+						\nIf you find a bug, leave a comment. It will be fixed asap</string>
 	<string name="version">v0.6.0</string>
 
 	<!-- week days -->
