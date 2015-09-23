@@ -1,29 +1,29 @@
 <resources>
-	<string name="app_name">NUK Time Table</string>
+	<string name="app_name">高雄大學 課表</string>
 	<string name="test">The Quick brown Fox jumps over the lazy dog</string>
-	<string name="user_name">User Name:</string>
-	<string name="password">Password:</string>
-	<string name="action_logout">Logout</string>
-	<string name="action_reload">Reload</string>
-	<string name="action_about">About</string>
-	<string name="action_info">Info</string>
-	<string name="login">Login</string>
-	<string name="exit">Exit</string>
-	<string name="clear">Clear</string>
-	<string name="creator">Creator: Joseph Yu</string>
+	<string name="user_name">帳號:</string>
+	<string name="password">密碼:</string>
+	<string name="action_logout">登出</string>
+	<string name="action_reload">重新整理</string>
+	<string name="action_about">有關 APP</string>
+	<string name="action_info">資料</string>
+	<string name="login">登入</string>
+	<string name="exit">離開</string>
+	<string name="clear">清除</string>
+	<string name="creator">製作者: Joseph Yu</string>
 	<string name="author">Joseph Yu</string>
-	<string name="username_missing">Username missing</string>
-	<string name="password_missing">Password missing</string>
-	<string name="network_issue">No Internet Access</string>
-	<string name="logging_in">Logging In</string>
-	<string name="verifying">Verifying Login Credentials</string>
-	<string name="success">Success</string>
-	<string name="fail">Fail</string>
-	<string name="login_fail">Login Fail</string>
-	<string name="reload_fail">Reload Fail</string>
-	<string name="wrong_username_password">Wrong Username/Password</string>
-	<string name="connection_timeout">Connection Timeout. Check your Internet Connection</string>
-	<string name="ok">OK</string>
+	<string name="username_missing">帳號未填</string>
+	<string name="password_missing">密碼未填</string>
+	<string name="network_issue">無網路可用</string>
+	<string name="logging_in">登錄中</string>
+	<string name="verifying">檢驗登錄資訊</string>
+	<string name="success">成功</string>
+	<string name="fail">失敗</string>
+	<string name="login_fail">登錄失敗</string>
+	<string name="reload_fail">重新整理失敗</string>
+	<string name="wrong_username_password">帳號/密碼錯誤</string>
+	<string name="connection_timeout">未連上 檢查您的網路連線</string>
+	<string name="ok">確定</string>
 	<string name="info">Information</string>
 	<string name="info_message">B01: 綜合大樓
 								\nC01: 工學院
@@ -34,26 +34,26 @@
 								\nL02: 法學院
 								\nM01: 管理學院
 								</string>
-	<string name="about">About</string>
-	<string name="about_message">This Application is made a student in National University of Kaohsiung.
-						\nIf you find a bug, leave a comment. It will be fixed asap</string>
-	<string name="version">v0.6.0</string>
+	<string name="about">有關 APP</string>
+	<string name="about_message">這個 App 是由高雄大學學生所做的
+						\n如果有找到錯誤 留下一些訊息 會盡快修復</string>
+	<string name="version">v0.6.2</string>
 
 	<!-- week days -->
-	<string name="monday_abbr">Mon</string>
-	<string name="tuesday_abbr">Tue</string>
-	<string name="wednesday_abbr">Wed</string>
-	<string name="thursday_abbr">Thu</string>
-	<string name="friday_abbr">Fri</string>
-	<string name="saturday_abbr">Sat</string>
-	<string name="sunday_abbr">Sun</string>
-	<string name="monday">Monday</string>
-	<string name="tuesday">Tuesday</string>
-	<string name="wednesday">WednesDay</string>
-	<string name="thursday">Thursday</string>
-	<string name="friday">Friday</string>
-	<string name="saturday">Saturday</string>
-	<string name="sunday">Sunday</string>
+	<string name="monday_abbr">一</string>
+	<string name="tuesday_abbr">二</string>
+	<string name="wednesday_abbr">三</string>
+	<string name="thursday_abbr">四</string>
+	<string name="friday_abbr">五</string>
+	<string name="saturday_abbr">六</string>
+	<string name="sunday_abbr">七</string>
+	<string name="monday">星期一</string>
+	<string name="tuesday">星期二</string>
+	<string name="wednesday">星期三</string>
+	<string name="thursday">星期四</string>
+	<string name="friday">星期五</string>
+	<string name="saturday">星期六</string>
+	<string name="sunday">星期七</string>
 
 	<!-- blocks -->
 	<string name="blockx">X</string>
@@ -73,7 +73,7 @@
 	<string name="block13">13</string>
 
 	<!-- time period -->
-	<string name="time_period">Time</string>
+	<string name="time_period">時間</string>
 	<string name="timex_1">07:05</string>
 	<string name="timex_2">07:55</string>
 	<string name="time1_1">08:05</string>
