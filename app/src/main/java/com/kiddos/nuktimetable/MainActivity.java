@@ -110,10 +110,6 @@ public class MainActivity extends Activity implements OnLoginListener {
 
 	@Override
 	public void onLogin(String webContent) {
-		// store the data in preference
-		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-		prefs.edit().putString(KEY_DATA, webContent).putBoolean(KEY_LOGIN_SUCCESS, true).apply();
-
 		// display the action bar
 		setDisplayActionBar(true);
 
@@ -130,6 +126,9 @@ public class MainActivity extends Activity implements OnLoginListener {
 		try {
 			getFragmentManager().beginTransaction().
 					replace(R.id.container, mainFragment).commit();
+			// store the data in preference
+			final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+			prefs.edit().putString(KEY_DATA, webContent).putBoolean(KEY_LOGIN_SUCCESS, true).apply();
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		}

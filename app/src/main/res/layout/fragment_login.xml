@@ -104,6 +104,7 @@
 			android:layout_marginLeft="15dp"
 			android:textAppearance="?android:attr/textAppearanceSmall"
 			android:text="@string/version"
+			android:textColor="@color/normal_text"
 			android:id="@+id/tvVersion"/>
 	<TextView
 			android:layout_width="wrap_content"

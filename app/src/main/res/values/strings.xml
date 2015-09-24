@@ -37,7 +37,7 @@
 	<string name="about">About</string>
 	<string name="about_message">This Application is made a student in National University of Kaohsiung.
 						\nIf you find a bug, leave a comment. It will be fixed asap</string>
-	<string name="version">v0.6.0</string>
+	<string name="version">v0.6.3</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>
