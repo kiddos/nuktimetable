@@ -131,6 +131,9 @@ public class MainActivity extends Activity implements OnLoginListener {
 			prefs.edit().putString(KEY_DATA, webContent).putBoolean(KEY_LOGIN_SUCCESS, true).apply();
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
+			final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+			prefs.edit().putString(KEY_DATA, webContent).putBoolean(KEY_LOGIN_SUCCESS, false).apply();
+			setDisplayActionBar(false);
 		}
 	}
 }
