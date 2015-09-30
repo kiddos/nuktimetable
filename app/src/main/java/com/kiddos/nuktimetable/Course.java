@@ -1,7 +1,7 @@
 package com.kiddos.nuktimetable;
 
-import java.io.Serializable;
-import java.util.Arrays;
+import java.io.*;
+import java.util.*;
 
 public class Course implements Serializable, Comparable<Course> {
 	private String courseId;
@@ -84,7 +84,6 @@ public class Course implements Serializable, Comparable<Course> {
 
 	public String[] getTimeBlocks() {
 		try {
-
 			int endBracket = blocks.indexOf(')');
 			String tb = blocks.substring(endBracket + 1);
 			if (!tb.startsWith("_")) tb = "_" + tb;
@@ -97,6 +96,25 @@ public class Course implements Serializable, Comparable<Course> {
 		} catch (IndexOutOfBoundsException e) {
 			return new String[]{};
 		}
+	}
+
+	public HashMap<Integer, String[]> getTimeBlockMap() {
+		final HashMap<Integer, String[]> timeBlockMap = new HashMap<>();
+		final String[] timeBlocks = blocks.split("\\(");
+		for (String tb : timeBlocks) {
+			if (!tb.equals("")) {
+				final int weekday = Integer.parseInt(String.valueOf(tb.charAt(0)));
+				final String[] timeblocks = tb.substring(tb.indexOf("_")+1).split("_");
+				timeBlockMap.put(weekday, timeblocks);
+			}
+		}
+		// testing
+//		Set<Integer> wd = timeBlockMap.keySet();
+//		for (int d : wd) {
+//			System.out.println("week day: " + d);
+//			System.out.println("time block: " + Arrays.toString(timeBlockMap.get(d)));
+//		}
+		return timeBlockMap;
 	}
 
 	@Override

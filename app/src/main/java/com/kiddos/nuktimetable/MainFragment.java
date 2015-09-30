@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.*;
 
 public class MainFragment extends Fragment {
@@ -216,61 +218,66 @@ public class MainFragment extends Fragment {
 			}
 
 			for (Course course : latestCourses) {
-				int weekDay = course.getWeekDay();
-				int index = 0;
-				int col = NUM_COL;
+				final HashMap<Integer, String[]> timeBlockMap = course.getTimeBlockMap();
+				final Set<Integer> weekDays = timeBlockMap.keySet();
 				course.setColor(getColorSeq());
-				for (String block : course.getTimeBlocks()) {
-					switch (block) {
-						case "X":
-						case "x":
-							index = weekDay;
-							break;
-						case "1":
-							index = col + weekDay;
-							break;
-						case "2":
-							index = 2 * col + weekDay;
-							break;
-						case "3":
-							index = 3 * col + weekDay;
-							break;
-						case "4":
-							index = 4 * col + weekDay;
-							break;
-						case "Y":
-						case "y":
-							index = 5 * col + weekDay;
-							break;
-						case "5":
-							index = 6 * col + weekDay;
-							break;
-						case "6":
-							index = 7 * col + weekDay;
-							break;
-						case "7":
-							index = 8 * col + weekDay;
-							break;
-						case "8":
-							index = 9 * col + weekDay;
-							break;
-						case "9":
-							index = 10 * col + weekDay;
-							break;
-						case "10":
-							index = 11 * col + weekDay;
-							break;
-						case "11":
-							index = 12 * col + weekDay;
-							break;
-						case "12":
-							index = 13 * col + weekDay;
-							break;
-						case "13":
-							index = 14 * col + weekDay;
-							break;
+				for (int weekDay: weekDays) {
+					final int col = NUM_COL;
+					final String[] blocks = timeBlockMap.get(weekDay);
+					int index = 0;
+
+					for (String block : blocks) {
+						switch (block) {
+							case "X":
+							case "x":
+								index = weekDay;
+								break;
+							case "1":
+								index = col + weekDay;
+								break;
+							case "2":
+								index = 2 * col + weekDay;
+								break;
+							case "3":
+								index = 3 * col + weekDay;
+								break;
+							case "4":
+								index = 4 * col + weekDay;
+								break;
+							case "Y":
+							case "y":
+								index = 5 * col + weekDay;
+								break;
+							case "5":
+								index = 6 * col + weekDay;
+								break;
+							case "6":
+								index = 7 * col + weekDay;
+								break;
+							case "7":
+								index = 8 * col + weekDay;
+								break;
+							case "8":
+								index = 9 * col + weekDay;
+								break;
+							case "9":
+								index = 10 * col + weekDay;
+								break;
+							case "10":
+								index = 11 * col + weekDay;
+								break;
+							case "11":
+								index = 12 * col + weekDay;
+								break;
+							case "12":
+								index = 13 * col + weekDay;
+								break;
+							case "13":
+								index = 14 * col + weekDay;
+								break;
+						}
+						courses[index] = course;
 					}
-					courses[index] = course;
 				}
 			}
 		}

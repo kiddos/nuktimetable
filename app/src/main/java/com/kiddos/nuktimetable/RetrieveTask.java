@@ -24,7 +24,7 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	public static final String POST_METHOD = "POST";
 	public static final String RESULT_WRONG_CREDENTIALS = "wrong";
 	public static final String RESULT_EXCEPTION_OCCUR = "exception";
-	public static final int CONNECTION_TIMEOUT = 6000;
+	public static final int CONNECTION_TIMEOUT = 12000;
 	public static final int READ_TIMEOUT = 6000;
 	private static final String MODE_LOGIN = "mode_login";
 	private static final String MODE_RELOAD = "mode_reload";
@@ -180,6 +180,13 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 						}
 					}
 				} else if (mode.equals(MODE_RELOAD)) {
+					// store the data in preference
+					final SharedPreferences prefs = context.getSharedPreferences(
+							MainActivity.PREFERENCE, Context.MODE_PRIVATE);
+					prefs.edit().
+							putString(MainActivity.KEY_DATA, content).
+							putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
+
 					if (scheduleAdapter != null) {
 						final HTMLParser parser = new HTMLParser(content);
 						final ArrayList<Course> courses = parser.getCourses();
