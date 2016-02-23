@@ -10,12 +10,14 @@
 	<color name="normal_text">#585858</color>
 	<color name="hint_text">#848484</color>
 	<color name="error_text">#FE2E2E</color>
-	<color name="red">#FA5858</color>
-	<color name="orange">#fa9a2d</color>
-	<color name="yellow">#f7e110</color>
-	<color name="green">#27c027</color>
-	<color name="blue">#58ACFA</color>
+	<color name="red">#de3636</color>
+	<color name="orange">#ef8e20</color>
+	<color name="yellow">#e6d10a</color>
+	<color name="green">#24b924</color>
+	<color name="blue">#3990e2</color>
 	<color name="teal">#01c0b8</color>
-	<color name="purple">#ad74e5</color>
+	<color name="purple">#ab55ed</color>
+	<color name="pink">#de2a9f</color>
+	<color name="brown">#b45120</color>
 	<color name="empty">#EEEEEE</color>
 </resources>
