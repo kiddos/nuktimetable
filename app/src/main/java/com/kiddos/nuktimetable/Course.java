@@ -6,6 +6,8 @@ import java.io.*;
 import java.util.*;
 
 public class Course implements Serializable, Comparable<Course> {
+	public static final int SHORT_COURSE_NAME_LENGTH = 12;
+	public static final String SHORT_COURSE_NAME_ABBRE = "...";
 	private String courseId;
 	private String courseName;
 	private int courseYear;
@@ -42,6 +44,16 @@ public class Course implements Serializable, Comparable<Course> {
 
 	public String getCourseName() {
 		return courseName.substring(firstWordCharacter(courseName));
+	}
+
+	public String getAbbreCourseName() {
+		String cn = courseName.substring(firstWordCharacter(courseName));
+		if (cn.length() > SHORT_COURSE_NAME_LENGTH) {
+			return cn.substring(0, SHORT_COURSE_NAME_LENGTH - SHORT_COURSE_NAME_ABBRE.length())
+					+ SHORT_COURSE_NAME_ABBRE;
+		} else {
+			return cn;
+		}
 	}
 
 	public int getCourseYear() {
