@@ -3,8 +3,8 @@ package com.kiddos.nuktimetable;
 import android.app.*;
 import android.content.*;
 import android.content.res.Configuration;
-import android.graphics.*;
 import android.os.*;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.*;
 import android.widget.*;
@@ -302,15 +302,15 @@ public class MainFragment extends Fragment {
 		private int getColorSeq() {
 			final Context context = getActivity();
 			int[] seq = {
-					context.getResources().getColor(R.color.purple),
-					context.getResources().getColor(R.color.yellow),
-					context.getResources().getColor(R.color.green),
-					context.getResources().getColor(R.color.red),
-					context.getResources().getColor(R.color.blue),
-					context.getResources().getColor(R.color.orange),
-					context.getResources().getColor(R.color.teal),
-					context.getResources().getColor(R.color.pink),
-					context.getResources().getColor(R.color.brown),
+					ContextCompat.getColor(context, R.color.purple),
+					ContextCompat.getColor(context, R.color.yellow),
+					ContextCompat.getColor(context, R.color.green),
+					ContextCompat.getColor(context, R.color.red),
+					ContextCompat.getColor(context, R.color.blue),
+					ContextCompat.getColor(context, R.color.orange),
+					ContextCompat.getColor(context, R.color.teal),
+					ContextCompat.getColor(context, R.color.pink),
+					ContextCompat.getColor(context, R.color.brown),
 			};
 
 			int color = seq[colorSeq];
