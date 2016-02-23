@@ -15,8 +15,14 @@ import java.util.Collections;
 public class RetrieveTask extends AsyncTask<String, Void, String> {
 	public static final String CONTENT_URL = "http://elearning.nuk.edu.tw/m_student/m_stu_index.php";
 	public static final String LOGIN_URL = "http://stu.nuk.edu.tw/GEC/login_at2.asp";
-	public static final String USERNAME = "stuid";
-	public static final String PASSWORD = "stupw";
+	public static final String LATEST_CONTENT_URL = "http://course.nuk.edu.tw/Sel/Query0195.asp";
+	public static final String LATEST_LOGIN_URL = "http://course.nuk.edu.tw/Sel/SelectMain1.asp";
+	public static final String LATEST_LOGIN_PAGE_URL = "http://course.nuk.edu.tw/Sel/Login.asp";
+	public static final String USERNAME_KEY = "stuid";
+	public static final String PASSWORD_KEY = "stupw";
+	public static final String LATEST_USERNAME_KEY = "Account";
+	public static final String LATEST_PASSWORD_KEY = "Password";
+	public static final String LATEST_ERROR_STRING = "帳號、密碼有誤，請確認後再重新登入！";
 	public static final String SETURL = "seturl";
 	public static final String SETURL_VALUE = "http://elearning.nuk.edu.tw/";
 	public static final String CHKID = "CHKID";
@@ -36,20 +42,25 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 	private GridView weekday, schedule;
 	private MainFragment.ScheduleAdapter scheduleAdapter;
 	private MainFragment.WeekdayAdapter weekdayAdapter;
+	private boolean latest = false;
 
-	public RetrieveTask(Context context, final OnLoginListener handler, final TextView errorMsg) {
+	public RetrieveTask(final Context context,
+						final OnLoginListener handler,
+						final TextView errorMsg) {
 		this.context = context;
 		this.handler = handler;
 		this.errorMsg = errorMsg;
 
 		this.mode = MODE_LOGIN;
+		this.latest = false;
 	}
 
 	public RetrieveTask(final Context context,
 						final GridView weekday,
 						final GridView schedule,
 						final MainFragment.WeekdayAdapter weekdayAdapter,
-						final MainFragment.ScheduleAdapter scheduleAdapter) {
+						final MainFragment.ScheduleAdapter scheduleAdapter,
+						final boolean latest) {
 		this.context = context;
 		this.weekday = weekday;
 		this.schedule = schedule;
@@ -57,7 +68,9 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 		this.scheduleAdapter = scheduleAdapter;
 
 		this.mode = MODE_RELOAD;
+		this.latest = latest;
 	}
+
 
 	@Override
 	protected void onPreExecute() {
@@ -80,67 +93,159 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 		try {
 			final String username = arg[0];
 			final String password = arg[1];
-			URL url = new URL(LOGIN_URL);
-			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-			connection.setRequestMethod(POST_METHOD);
-			connection.setConnectTimeout(CONNECTION_TIMEOUT);
-			connection.setReadTimeout(READ_TIMEOUT);
-			connection.setRequestProperty("Connection", "keep-alive");
-			connection.setRequestProperty("Accept-Charset", "utf-8");
-			connection.setRequestProperty("Cookie", "");
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
+			Log.i("username: ", username);
+			Log.i("password: ", password);
+			if (latest) {
+				URL url = new URL(LATEST_LOGIN_PAGE_URL);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setConnectTimeout(CONNECTION_TIMEOUT);
+				connection.setReadTimeout(READ_TIMEOUT);
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(connection.getInputStream(), "big5"));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					System.out.println(line);
+				}
 
-			Uri.Builder builder = new Uri.Builder().
-					appendQueryParameter(USERNAME, username).
-					appendQueryParameter(PASSWORD, password).
-					appendQueryParameter(SETURL, SETURL_VALUE).
-					appendQueryParameter(CHKID, CHKID_VALUE);
+				String cookies = connection.getHeaderField("Set-Cookie");
+				cookies = connection.getHeaderField(4) + cookies;
+				Log.i("cookie", cookies);
+				connection.disconnect();
 
-			final String query = builder.build().getEncodedQuery();
-			OutputStream out = connection.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
-			writer.write(query);
-			writer.flush();
-			writer.close();
-			out.close();
+				url = new URL(LATEST_LOGIN_URL);
+				connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod(POST_METHOD);
+				connection.setConnectTimeout(CONNECTION_TIMEOUT);
+				connection.setReadTimeout(READ_TIMEOUT);
+				connection.setChunkedStreamingMode(0);
+				connection.setRequestProperty("Accept", "*/*");
+				connection.setRequestProperty("Accept-Encoding", "gzip, deflate");
+				connection.setRequestProperty("Accept-Language", "en-US,en;q=0.8");
+				connection.setRequestProperty("Cache-Control", "max-age=0");
+				connection.setRequestProperty("Connection", "keep-alive");
+				connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+				connection.setRequestProperty("Cookie", cookies);
+				connection.setRequestProperty("Referer", "http://course.nuk.edu.tw/Sel/login.asp");
+				connection.setRequestProperty("Upgrade-Insecure-Requests", "1");
+				connection.setRequestProperty("User-Agent", "python-requests/2.9.1");
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
 
-			connection.connect();
+				Uri.Builder builder = new Uri.Builder().
+						appendQueryParameter(LATEST_USERNAME_KEY, username).
+						appendQueryParameter(LATEST_PASSWORD_KEY, password);
 
-			final StringBuilder response = new StringBuilder();
-			InputStream in = connection.getInputStream();
-			BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-			String line;
-			while ((line = reader.readLine()) != null) {
-				System.out.println(line);
-				response.append(line);
+				String query = builder.build().getEncodedQuery();
+				Log.i("query", query);
+				OutputStream out = connection.getOutputStream();
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "big5"));
+				writer.write(query);
+				writer.flush();
+				writer.close();
+				out.close();
+
+				connection.connect();
+
+				final StringBuilder response = new StringBuilder();
+				Log.i("response code", connection.getResponseCode() + "");
+				Log.i("response message", connection.getResponseMessage());
+				InputStream in = connection.getInputStream();
+				reader = new BufferedReader(new InputStreamReader(in, "big5"));
+				while ((line = reader.readLine()) != null) {
+					System.out.println(line);
+					response.append(line);
+				}
+				if (response.toString().contains(LATEST_ERROR_STRING)) {
+					Log.i("LoginTask", "Wrong Username/Password");
+					return RESULT_WRONG_CREDENTIALS;
+				}
+
+				connection.disconnect();
+
+				Log.i("LatestRetrieveTask", "new url");
+				url = new URL(LATEST_CONTENT_URL);
+				connection = (HttpURLConnection) url.openConnection();
+				connection.setConnectTimeout(CONNECTION_TIMEOUT);
+				connection.setReadTimeout(READ_TIMEOUT);
+				connection.setRequestProperty("Connection", "keep-alive");
+				connection.setRequestProperty("Accept-Charset", "utf-8");
+				connection.setRequestProperty("Cookie", cookies);
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
+
+				Log.i("LatestRetrieveTask", "reading data");
+				final StringBuilder content = new StringBuilder();
+				in = connection.getInputStream();
+				reader = new BufferedReader(new InputStreamReader(in, "big5"));
+				while ((line = reader.readLine()) != null) {
+					content.append(line);
+					content.append("\n");
+				}
+				connection.disconnect();
+				return content.toString();
+			} else {
+				URL url = new URL(LOGIN_URL);
+				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+				connection.setRequestMethod(POST_METHOD);
+				connection.setConnectTimeout(CONNECTION_TIMEOUT);
+				connection.setReadTimeout(READ_TIMEOUT);
+				connection.setRequestProperty("Connection", "keep-alive");
+				connection.setRequestProperty("Accept-Charset", "utf-8");
+				connection.setRequestProperty("Cookie", "");
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
+
+				Uri.Builder builder = new Uri.Builder().
+						appendQueryParameter(USERNAME_KEY, username).
+						appendQueryParameter(PASSWORD_KEY, password).
+						appendQueryParameter(SETURL, SETURL_VALUE).
+						appendQueryParameter(CHKID, CHKID_VALUE);
+
+				final String query = builder.build().getEncodedQuery();
+				OutputStream out = connection.getOutputStream();
+				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out, "UTF-8"));
+				writer.write(query);
+				writer.flush();
+				writer.close();
+				out.close();
+
+				connection.connect();
+
+				final StringBuilder response = new StringBuilder();
+				InputStream in = connection.getInputStream();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+				String line;
+				while ((line = reader.readLine()) != null) {
+					System.out.println(line);
+					response.append(line);
+				}
+				if (!response.toString().contains(CONTENT_URL)) {
+					Log.i("LoginTask", "Wrong Username/Password");
+					return RESULT_WRONG_CREDENTIALS;
+				}
+
+				final String cookies = connection.getHeaderField("Set-Cookie");
+				connection.disconnect();
+
+				url = new URL(CONTENT_URL);
+				connection = (HttpURLConnection) url.openConnection();
+				connection.setConnectTimeout(CONNECTION_TIMEOUT);
+				connection.setReadTimeout(READ_TIMEOUT);
+				connection.setRequestProperty("Connection", "keep-alive");
+				connection.setRequestProperty("Accept-Charset", "utf-8");
+				connection.setRequestProperty("Cookie", cookies);
+				connection.setDoInput(true);
+				connection.setDoOutput(true);
+
+				final StringBuilder content = new StringBuilder();
+				in = connection.getInputStream();
+				reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+				while ((line = reader.readLine()) != null) {
+					content.append(line);
+				}
+				connection.disconnect();
+				return content.toString();
 			}
-			if (!response.toString().contains(CONTENT_URL)) {
-				Log.i("LoginTask", "Wrong Username/Password");
-				return RESULT_WRONG_CREDENTIALS;
-			}
-
-			final String cookies = connection.getHeaderField("Set-Cookie");
-			connection.disconnect();
-
-			url = new URL(CONTENT_URL);
-			connection = (HttpURLConnection) url.openConnection();
-			connection.setConnectTimeout(CONNECTION_TIMEOUT);
-			connection.setReadTimeout(READ_TIMEOUT);
-			connection.setRequestProperty("Connection", "keep-alive");
-			connection.setRequestProperty("Accept-Charset", "utf-8");
-			connection.setRequestProperty("Cookie", cookies);
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-
-			final StringBuilder content = new StringBuilder();
-			in = connection.getInputStream();
-			reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-			while ((line = reader.readLine()) != null) {
-				content.append(line);
-			}
-			connection.disconnect();
-			return content.toString();
 		} catch (IOException e) {
 			e.printStackTrace();
 			return RESULT_EXCEPTION_OCCUR;
@@ -180,16 +285,30 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 						}
 					}
 				} else if (mode.equals(MODE_RELOAD)) {
+					Log.i("onPostExecute", "reload");
 					// store the data in preference
 					final SharedPreferences prefs = context.getSharedPreferences(
 							MainActivity.PREFERENCE, Context.MODE_PRIVATE);
-					prefs.edit().
-							putString(MainActivity.KEY_DATA, content).
-							putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
 
 					if (scheduleAdapter != null) {
-						final HTMLParser parser = new HTMLParser(content);
-						final ArrayList<Course> courses = parser.getCourses();
+						final ArrayList<Course> courses;
+						if (latest) {
+							final LatestHTMLParser parser = new LatestHTMLParser(content);
+							courses = parser.getCourses();
+							prefs.edit().
+									putString(MainActivity.KEY_LATEST_DATA, content).
+									putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
+						} else {
+							final HTMLParser parser = new HTMLParser(content);
+							courses = parser.getCourses();
+							prefs.edit().
+									putString(MainActivity.KEY_DATA, content).
+									putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
+						}
+						for (Course c : courses) {
+							Log.i("course", c.toString());
+						}
+
 						// sort according to year and semester
 						Collections.sort(courses);
 
@@ -225,6 +344,8 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 								System.out.println(c.toString());
 							}
 						}
+					} else {
+						Log.i("schedule adapter", "schedule adapter null pointer");
 					}
 				}
 				break;
