@@ -1,5 +1,7 @@
 package com.kiddos.nuktimetable;
 
+import android.support.annotation.NonNull;
+
 import java.io.*;
 import java.util.*;
 
@@ -50,16 +52,8 @@ public class Course implements Serializable, Comparable<Course> {
 		return semester;
 	}
 
-	public String getBlocks() {
-		return blocks;
-	}
-
 	public String getClassroom() {
 		return classroom;
-	}
-
-	public int getViewCount() {
-		return viewCount;
 	}
 
 	public int getColor() {
@@ -89,9 +83,7 @@ public class Course implements Serializable, Comparable<Course> {
 			if (!tb.startsWith("_")) tb = "_" + tb;
 			String[] data = tb.split("_");
 			String[] timeBlocks = new String[data.length -1];
-			for (int i = 1 ; i < data.length ; i ++) {
-				timeBlocks[i-1] = data[i];
-			}
+			System.arraycopy(data, 1, timeBlocks, 0, data.length - 1);
 			return timeBlocks;
 		} catch (IndexOutOfBoundsException e) {
 			return new String[]{};
@@ -134,7 +126,19 @@ public class Course implements Serializable, Comparable<Course> {
 	}
 
 	@Override
-	public int compareTo(Course course) {
+	public boolean equals(Object obj) {
+		try {
+			Course course = (Course) obj;
+			return this.compareTo(course) == 0 &&
+					this.courseId.equals(course.getCourseId());
+		} catch (ClassCastException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	@Override
+	public int compareTo(@NonNull Course course) {
 		if (this.courseYear > course.getCourseYear()) {
 			return -1;
 		} else if (this.courseYear < course.getCourseYear()) {
@@ -145,7 +149,13 @@ public class Course implements Serializable, Comparable<Course> {
 			} else if (this.semester.equals("下") && course.getSemester().equals("上")) {
 				return -1;
 			} else {
-				return this.courseName.compareTo(course.getCourseName());
+				if (this.getWeekDay() < course.getWeekDay()) {
+					return 1;
+				} else if (this.getWeekDay() > course.getWeekDay()) {
+					return -1;
+				} else {
+					return this.courseName.compareTo(course.getCourseName());
+				}
 			}
 		}
 	}
