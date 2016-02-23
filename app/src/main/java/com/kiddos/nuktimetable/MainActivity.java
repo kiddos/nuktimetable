@@ -8,7 +8,9 @@ import android.view.*;
 public class MainActivity extends Activity implements OnLoginListener {
 	public static final String PREFERENCE = "main_prefs";
 	public static final String KEY_DATA = "data";
+	public static final String KEY_LATEST_DATA = "latest_data";
 	public static final String KEY_LOGIN_SUCCESS = "login";
+	public static final String KEY_SHOULD_DISPLAY_LATEST = "display_latest";
 	private Fragment loginFragment, mainFragment;
 	private Handler handler;
 
@@ -34,10 +36,21 @@ public class MainActivity extends Activity implements OnLoginListener {
 
 		final FragmentManager fragmentManager = this.getFragmentManager();
 		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-		boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
+		final boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
 		if (lastSuccess) {
 			setDisplayActionBar(true);
-			String data = prefs.getString(KEY_DATA, "");
+
+			final boolean shouldDisplayLatest = prefs.getBoolean(KEY_SHOULD_DISPLAY_LATEST, false);
+			String data;
+			if (shouldDisplayLatest) {
+				data = prefs.getString(KEY_LATEST_DATA, "");
+				System.out.println("should display latest");
+			} else {
+				data = prefs.getString(KEY_DATA, "");
+				System.out.println("should NOT display latest");
+			}
+			System.out.println(data);
+
 			Bundle arg = new Bundle();
 			arg.putString(MainFragment.KEY_CONTENT, data);
 
@@ -65,6 +78,12 @@ public class MainActivity extends Activity implements OnLoginListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_main, menu);
+		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+		if (prefs.getBoolean(KEY_SHOULD_DISPLAY_LATEST, false)) {
+			menu.findItem(R.id.action_show_latest).setIcon(R.drawable.ic_star_white_24dp);
+		} else {
+			menu.findItem(R.id.action_show_latest).setIcon(R.drawable.ic_star_border_white_24dp);
+		}
 		return true;
 	}
 
@@ -84,6 +103,16 @@ public class MainActivity extends Activity implements OnLoginListener {
 			getFragmentManager().beginTransaction().
 					replace(R.id.container, loginFragment).commit();
 			return true;
+		} else if (id == R.id.action_show_latest) {
+			final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+			boolean shouldDisplayLatest = !prefs.getBoolean(KEY_SHOULD_DISPLAY_LATEST, false);
+			prefs.edit().putBoolean(KEY_SHOULD_DISPLAY_LATEST, shouldDisplayLatest).apply();
+			if (shouldDisplayLatest) {
+				item.setIcon(R.drawable.ic_star_white_24dp);
+			} else {
+				item.setIcon(R.drawable.ic_star_border_white_24dp);
+			}
+			System.out.println("should display latest: " + shouldDisplayLatest);
 		} else if (id == R.id.action_info) {
 			try {
 				final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
