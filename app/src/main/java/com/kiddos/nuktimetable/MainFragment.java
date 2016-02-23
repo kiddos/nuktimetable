@@ -8,8 +8,7 @@ import android.util.Log;
 import android.view.*;
 import android.widget.*;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+//import java.io.*;
 import java.util.*;
 
 public class MainFragment extends Fragment {
@@ -37,10 +36,24 @@ public class MainFragment extends Fragment {
 //			reader.close();
 //			final String content = builder.toString();
 
+			final SharedPreferences prefs = getActivity().getSharedPreferences(
+					MainActivity.PREFERENCE, Context.MODE_PRIVATE);
+			final boolean shouldDisplayLatest = prefs.getBoolean(
+					MainActivity.KEY_SHOULD_DISPLAY_LATEST, false);
+
 			final Bundle arg = getArguments();
 			final String content = arg.getString(KEY_CONTENT, "");
-			final HTMLParser parser = new HTMLParser(content);
-			final ArrayList<Course> courses = parser.getCourses();
+
+			final ArrayList<Course> courses;
+			if (shouldDisplayLatest) {
+				System.out.println("should display latest");
+				final LatestHTMLParser parser = new LatestHTMLParser(content);
+				courses = parser.getCourses();
+			} else {
+				System.out.println("should NOT display latest");
+				final HTMLParser parser = new HTMLParser(content);
+				courses = parser.getCourses();
+			}
 			Collections.sort(courses);
 
 			if (courses.size() > 0) {
@@ -100,7 +113,10 @@ public class MainFragment extends Fragment {
 			final String password = prefs.getString(LoginFragment.KEY_PASSWORD, "");
 
 			// reload task
-			new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter, scheduleAdapter).
+			final SharedPreferences mainPrefs = getActivity().
+					getSharedPreferences(MainActivity.PREFERENCE, Context.MODE_PRIVATE);
+			new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter,
+					scheduleAdapter, mainPrefs.getBoolean(MainActivity.KEY_SHOULD_DISPLAY_LATEST, false)).
 					execute(username, password);
 		}
 		return super.onOptionsItemSelected(item);
@@ -283,15 +299,16 @@ public class MainFragment extends Fragment {
 		}
 
 		private int getColorSeq() {
+			final Context context = getActivity();
 			int[] seq = {
-					Color.rgb(250, 67, 67),		// red
-					Color.rgb(255, 155, 68),	// orange
-					Color.rgb(255, 213, 0),		// yellow
-					Color.rgb(39, 192, 39),		// green
-					Color.rgb(88, 172, 250),	// blue
-					Color.rgb(1, 192, 184),		// teal
-					Color.rgb(173, 116, 229),	// purple
-					Color.rgb(238, 89, 218)		// pink
+					context.getResources().getColor(R.color.purple),
+					context.getResources().getColor(R.color.yellow),
+					context.getResources().getColor(R.color.green),
+					context.getResources().getColor(R.color.red),
+					context.getResources().getColor(R.color.blue),
+					context.getResources().getColor(R.color.orange),
+					context.getResources().getColor(R.color.teal),
+					context.getResources().getColor(R.color.pink),
 			};
 
 			int color = seq[colorSeq];
