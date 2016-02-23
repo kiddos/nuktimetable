@@ -2,6 +2,7 @@ package com.kiddos.nuktimetable;
 
 import android.app.*;
 import android.content.*;
+import android.content.res.Configuration;
 import android.graphics.*;
 import android.os.*;
 import android.util.Log;
@@ -309,6 +310,7 @@ public class MainFragment extends Fragment {
 					context.getResources().getColor(R.color.orange),
 					context.getResources().getColor(R.color.teal),
 					context.getResources().getColor(R.color.pink),
+					context.getResources().getColor(R.color.brown),
 			};
 
 			int color = seq[colorSeq];
@@ -510,7 +512,12 @@ public class MainFragment extends Fragment {
 						final TextView classroom = (TextView) convertView.findViewById(R.id.tvClassroom);
 						final LinearLayout background = (LinearLayout) convertView.findViewById(R.id.background);
 						// set all the views
-						if (className != null) className.setText(course.getCourseName());
+						int orientation = getActivity().getResources().getConfiguration().orientation;
+						if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+							if (className != null) className.setText(course.getAbbreCourseName());
+						} else {
+							if (className != null) className.setText(course.getCourseName());
+						}
 						if (classroom != null) classroom.setText(course.getClassroom());
 						if (background != null) background.setBackgroundColor(course.getColor());
 					}
