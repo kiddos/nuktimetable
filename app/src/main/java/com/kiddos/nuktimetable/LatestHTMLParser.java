@@ -35,7 +35,6 @@ public class LatestHTMLParser {
 				first = false;
 				continue;
 			}
-			System.out.println(tr.text());
 			Course course = processRowItem(tr);
 			courses.add(course);
 		}
@@ -115,7 +114,6 @@ public class LatestHTMLParser {
 							blocks += "_" + b;
 						}
 					}
-					System.out.println("blocks: " + blocks);
 					break;
 				case INDEX_COURSE_CLASSROOM:
 					String[] classroomData = e.text().split(",");
