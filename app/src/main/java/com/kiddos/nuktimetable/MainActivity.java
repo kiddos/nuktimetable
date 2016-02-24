@@ -49,7 +49,6 @@ public class MainActivity extends Activity implements OnLoginListener {
 				data = prefs.getString(KEY_DATA, "");
 				System.out.println("should NOT display latest");
 			}
-			System.out.println(data);
 
 			Bundle arg = new Bundle();
 			arg.putString(MainFragment.KEY_CONTENT, data);
