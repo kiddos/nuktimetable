@@ -42,19 +42,30 @@ public class MainFragment extends Fragment {
 			final boolean shouldDisplayLatest = prefs.getBoolean(
 					MainActivity.KEY_SHOULD_DISPLAY_LATEST, false);
 
+			// retrieve old content
 			final Bundle arg = getArguments();
-			final String content = arg.getString(KEY_CONTENT, "");
+			final String oldContent = arg.getString(KEY_CONTENT, "");
+			final String content;
 
 			final ArrayList<Course> courses;
 			if (shouldDisplayLatest) {
-				System.out.println("should display latest");
+				Log.i("MainFragment", "should display latest");
+				content = prefs.getString(MainActivity.KEY_LATEST_DATA, "");
 				final LatestHTMLParser parser = new LatestHTMLParser(content);
 				courses = parser.getCourses();
 			} else {
-				System.out.println("should NOT display latest");
+				Log.i("MainFragment", "should NOT display latest");
+				content = prefs.getString(MainActivity.KEY_DATA, "");
 				final HTMLParser parser = new HTMLParser(content);
 				courses = parser.getCourses();
 			}
+
+			// correct the saved content
+			if (!content.equals(oldContent)) {
+				arg.putString(MainFragment.KEY_CONTENT, content);
+			}
+
+			// sort the course
 			Collections.sort(courses);
 
 			if (courses.size() > 0) {
@@ -82,7 +93,7 @@ public class MainFragment extends Fragment {
 
 				// debug info
 				for (Course c : latestCourses) {
-					System.out.println(c.toString());
+					Log.i("course", c.toString());
 				}
 			}
 		} catch(Exception e) {
