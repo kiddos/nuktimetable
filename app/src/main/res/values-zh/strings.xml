@@ -7,6 +7,8 @@
 	<string name="action_reload">重新整理</string>
 	<string name="action_about">有關 APP</string>
 	<string name="action_info">資料</string>
+	<string name="action_help">說明</string>
+	<string name="action_get_latest">取得最新課表</string>
 	<string name="login">登入</string>
 	<string name="exit">離開</string>
 	<string name="clear">清除</string>
@@ -36,7 +38,8 @@
 								</string>
 	<string name="about">有關 APP</string>
 	<string name="about_message">這個 App 是由高雄大學學生所做的
-						\n如果有找到錯誤 留下一些訊息 會盡快修復</string>
+						\n如果有找到錯誤 留下一些訊息 會盡快修復
+	</string>
 	<string name="version">v0.6.4</string>
 
 	<!-- week days -->
@@ -109,4 +112,14 @@
 	<string name="class_name_example">電子電路工程實驗(二)</string>
 	<string name="course_id">EEB04B</string>
 	<string name="classroom">C01-301-1</string>
+
+	<string name="title_activity_help">說明</string>
+	<string name="help_title">新功能</string>
+	<string name="help1">按</string>
+	<string name="help2">讓它變成</string>
+	<string name="help3">然後</string>
+	<string name="help4">取得最新的課表</string>
+	<string name="help5">登出藏在menu裡</string>
+	<string name="help_icon_description">說明</string>
+	<string name="help_understand">了解!!</string>
 </resources>

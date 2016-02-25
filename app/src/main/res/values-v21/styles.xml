@@ -13,6 +13,17 @@
 		<!--<item name="android:windowTitleSize">0dp</item>-->
     </style>
 
+	<style name="FullscreenTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+		<item name="android:windowBackground">@color/theme_background_light</item>
+		<item name="android:colorPrimary">@color/theme_background</item>
+		<item name="android:colorPrimaryDark">@color/theme_background_dark</item>
+		<item name="android:textColorPrimary">@color/theme_text</item>
+		<item name="android:navigationBarColor">@color/theme_background_dark</item>
+		<item name="android:colorControlNormal">@color/theme_text_highlight</item>
+		<item name="android:colorControlActivated">@color/theme_text_highlight2</item>
+		<item name="android:colorControlHighlight">@color/theme_text_highlight2</item>
+	</style>
+
 	<style name="ButtonStyle">
 		<item name="android:backgroundTint">@color/theme_background_dark</item>
 		<item name="android:textColor">@color/theme_text</item>
