@@ -11,6 +11,7 @@ public class MainActivity extends Activity implements OnLoginListener {
 	public static final String KEY_LATEST_DATA = "latest_data";
 	public static final String KEY_LOGIN_SUCCESS = "login";
 	public static final String KEY_SHOULD_DISPLAY_LATEST = "display_latest";
+	public static final String KEY_FIRST_TIME_USING = "first_time";
 	private Fragment loginFragment, mainFragment;
 	private Handler handler;
 
@@ -19,12 +20,18 @@ public class MainActivity extends Activity implements OnLoginListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+		final boolean firstTime = prefs.getBoolean(KEY_FIRST_TIME_USING, true);
+		if (firstTime) {
+			startActivity(new Intent(this, HelpActivity.class));
+			prefs.edit().putBoolean(KEY_FIRST_TIME_USING, false).apply();
+		}
+
 		handler = new Handler();
 
 		if (savedInstanceState != null) {
 			// get the login success status
 			// to decide rather to show actionbar
-			final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 			boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
 			if (lastSuccess) setDisplayActionBar(true);
 			else setDisplayActionBar(false);
@@ -35,7 +42,6 @@ public class MainActivity extends Activity implements OnLoginListener {
 		mainFragment = new MainFragment();
 
 		final FragmentManager fragmentManager = this.getFragmentManager();
-		final SharedPreferences prefs = getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 		final boolean lastSuccess = prefs.getBoolean(KEY_LOGIN_SUCCESS, false);
 		if (lastSuccess) {
 			setDisplayActionBar(true);
@@ -112,6 +118,8 @@ public class MainActivity extends Activity implements OnLoginListener {
 				item.setIcon(R.drawable.ic_star_border_white_24dp);
 			}
 			System.out.println("should display latest: " + shouldDisplayLatest);
+		} else if (id == R.id.action_help) {
+			startActivity(new Intent(this, HelpActivity.class));
 		} else if (id == R.id.action_info) {
 			try {
 				final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
