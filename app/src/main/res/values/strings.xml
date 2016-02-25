@@ -7,6 +7,7 @@
 	<string name="action_reload">Reload</string>
 	<string name="action_about">About</string>
 	<string name="action_info">Info</string>
+	<string name="action_help">help</string>
 	<string name="action_get_latest">Get Latest</string>
 	<string name="login">Login</string>
 	<string name="exit">Exit</string>
@@ -27,17 +28,18 @@
 	<string name="ok">OK</string>
 	<string name="info">Information</string>
 	<string name="info_message">B01: 綜合大樓
-								\nC01: 工學院
-								\nC02: 理學院
-								\nH1-H2: 人文社會科學院
-								\nK01: 體育健康休閒大樓
-								\nL01: 圖書資訊大樓
-								\nL02: 法學院
-								\nM01: 管理學院
-								</string>
+		\nC01: 工學院
+		\nC02: 理學院
+		\nH1-H2: 人文社會科學院
+		\nK01: 體育健康休閒大樓
+		\nL01: 圖書資訊大樓
+		\nL02: 法學院
+		\nM01: 管理學院
+	</string>
 	<string name="about">About</string>
 	<string name="about_message">This Application is made a student in National University of Kaohsiung.
-						\nIf you find a bug, leave a comment. It will be fixed asap</string>
+		\nIf you find a bug, leave a comment. It will be fixed asap
+	</string>
 	<string name="version">v0.6.4</string>
 
 	<!-- week days -->
@@ -110,4 +112,14 @@
 	<string name="class_name_example">電子電路工程實驗(二)</string>
 	<string name="course_id">EEB04B</string>
 	<string name="classroom">C01-301-1</string>
+
+	<string name="title_activity_help">Help</string>
+	<string name="help_title">New Feature</string>
+	<string name="help1">Click</string>
+	<string name="help2">To make it</string>
+	<string name="help3">then</string>
+	<string name="help4">To Get Latest Schedule</string>
+	<string name="help5">Logout is hidden in menu</string>
+	<string name="help_icon_description">Help Icon</string>
+	<string name="help_understand">I Understand!!</string>
 </resources>

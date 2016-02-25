@@ -22,4 +22,15 @@
 		<item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
 	</style>
 
+	<style name="FullscreenTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+	</style>
+
+	<style name="HelpTextStyle">
+		<item name="android:paddingLeft">10dp</item>
+		<item name="android:paddingRight">10dp</item>
+		<item name="android:textColor">@color/theme_text_highlight</item>
+		<item name="android:gravity">center_horizontal</item>
+		<item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+	</style>
+
 </resources>
