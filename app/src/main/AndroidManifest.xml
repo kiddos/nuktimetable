@@ -26,6 +26,7 @@
 				android:name=".HelpActivity"
 				android:configChanges="orientation|keyboardHidden|screenSize"
 				android:label="@string/title_activity_help"
+				android:screenOrientation="portrait"
 				android:theme="@style/FullscreenTheme">
 			<meta-data
 					android:name="android.support.PARENT_ACTIVITY"
