@@ -93,8 +93,6 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 		try {
 			final String username = arg[0];
 			final String password = arg[1];
-			Log.i("username: ", username);
-			Log.i("password: ", password);
 			if (latest) {
 				URL url = new URL(LATEST_LOGIN_PAGE_URL);
 				HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -103,8 +101,9 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 				BufferedReader reader = new BufferedReader(
 						new InputStreamReader(connection.getInputStream(), "big5"));
 				String line;
+				Log.i("RetrieveTask", "reading for cookie");
 				while ((line = reader.readLine()) != null) {
-					System.out.println(line);
+					Log.i("RetrieveTask", line);
 				}
 
 				String cookies = connection.getHeaderField("Set-Cookie");
@@ -152,7 +151,6 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 				InputStream in = connection.getInputStream();
 				reader = new BufferedReader(new InputStreamReader(in, "big5"));
 				while ((line = reader.readLine()) != null) {
-					System.out.println(line);
 					response.append(line);
 				}
 				if (response.toString().contains(LATEST_ERROR_STRING)) {
@@ -178,6 +176,7 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 				in = connection.getInputStream();
 				reader = new BufferedReader(new InputStreamReader(in, "big5"));
 				while ((line = reader.readLine()) != null) {
+					// Log.i("retrieve task", line);
 					content.append(line);
 					content.append("\n");
 				}
@@ -216,7 +215,6 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
 				String line;
 				while ((line = reader.readLine()) != null) {
-					System.out.println(line);
 					response.append(line);
 				}
 				if (!response.toString().contains(CONTENT_URL)) {
@@ -293,18 +291,21 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 					if (scheduleAdapter != null) {
 						final ArrayList<Course> courses;
 						if (latest) {
+							// Log.i("RetrieveTask", "latest");
 							final LatestHTMLParser parser = new LatestHTMLParser(content);
 							courses = parser.getCourses();
 							prefs.edit().
 									putString(MainActivity.KEY_LATEST_DATA, content).
 									putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
 						} else {
+							// Log.i("RetrieveTask", "old");
 							final HTMLParser parser = new HTMLParser(content);
 							courses = parser.getCourses();
 							prefs.edit().
 									putString(MainActivity.KEY_DATA, content).
 									putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
 						}
+						// Log.i("content", content);
 						for (Course c : courses) {
 							Log.i("course", c.toString());
 						}
@@ -341,7 +342,7 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 
 							// debug info
 							for (Course c : latestCourses) {
-								System.out.println(c.toString());
+								Log.i("RetrieveTask", c.toString());
 							}
 						}
 					} else {
