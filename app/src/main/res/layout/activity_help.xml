@@ -90,7 +90,8 @@
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
 					style="@style/HelpTextStyle"
-					android:text="@string/help1"/>
+					android:text="@string/help1"
+					android:id="@+id/tvHelp1_1"/>
 			<ImageView
 					android:layout_width="wrap_content"
 					android:layout_height="wrap_content"
