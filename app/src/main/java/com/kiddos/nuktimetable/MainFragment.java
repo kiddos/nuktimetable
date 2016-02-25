@@ -127,6 +127,7 @@ public class MainFragment extends Fragment {
 			// reload task
 			final SharedPreferences mainPrefs = getActivity().
 					getSharedPreferences(MainActivity.PREFERENCE, Context.MODE_PRIVATE);
+			// Log.i("should display latest", mainPrefs.getBoolean(MainActivity.KEY_SHOULD_DISPLAY_LATEST, false) + "");
 			new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter,
 					scheduleAdapter, mainPrefs.getBoolean(MainActivity.KEY_SHOULD_DISPLAY_LATEST, false)).
 					execute(username, password);
