@@ -25,6 +25,7 @@ public class LatestHTMLParser {
 				processTableBody(e);
 			}
 		}
+		// System.out.println(html);
 	}
 
 	private void processTableBody(Element tbody) {
@@ -71,12 +72,12 @@ public class LatestHTMLParser {
 					break;
 				case INDEX_COURSE_BLOCK:
 					final String blockData = e.text();
-					Map<Integer, ArrayList<Integer>> block = new HashMap<>();
-					Pattern p = Pattern.compile("(\\S)([0-9]+)");
+					Map<Integer, ArrayList<String>> block = new HashMap<>();
+					Pattern p = Pattern.compile("(\\S)([0-9X]+)");
 					Matcher matcher = p.matcher(blockData);
 					while (matcher.find()) {
 						String day = matcher.group(1);
-						int blockNumber = Integer.parseInt(matcher.group(2));
+						String b = matcher.group(2);
 						int key = 0;
 						switch (day) {
 							case "一":
@@ -98,19 +99,19 @@ public class LatestHTMLParser {
 								key = 6;
 								break;
 						}
-						ArrayList<Integer> blockNum = block.get(key);
+						ArrayList<String> blockNum = block.get(key);
 						if (blockNum == null) {
 							blockNum = new ArrayList<>();
 						}
 
-						blockNum.add(blockNumber);
+						blockNum.add(b);
 						block.put(key, blockNum);
 					}
 
 					for (int key : block.keySet()) {
-						ArrayList<Integer> blockNum = block.get(key);
+						ArrayList<String> blockNum = block.get(key);
 						blocks = String.format("(%d)", key);
-						for (int b : blockNum) {
+						for (String b : blockNum) {
 							blocks += "_" + b;
 						}
 					}
