@@ -40,6 +40,7 @@
 	<string name="about_message">這個 App 是由高雄大學學生所做的
 						\n如果有找到錯誤 留下一些訊息 會盡快修復
 	</string>
+	<string name="refresh_fail">重新整理失敗 再試一次！</string>
 	<string name="version">v0.6.4</string>
 
 	<!-- week days -->
