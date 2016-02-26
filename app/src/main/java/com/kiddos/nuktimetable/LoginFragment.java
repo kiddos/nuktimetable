@@ -54,6 +54,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
 	@Override
 	public void onClick(View view) {
+		final SharedPreferences prefs = getActivity().
+				getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 		switch (view.getId()) {
 			case R.id.btnLogin:
 				if (!isConnectingOrConnected()) {
@@ -76,9 +78,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 				}
 				final String username = this.username.getText().toString();
 				final String password = this.password.getText().toString();
-
-				final SharedPreferences prefs = getActivity().
-						getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
 				prefs.edit().putString(KEY_USERNAME, username).
 						putString(KEY_PASSWORD, password).apply();
 
@@ -88,6 +87,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 			case R.id.btnClear:
 				this.username.setText("");
 				this.password.setText("");
+				prefs.edit().putString(KEY_USERNAME, "").
+						putString(KEY_PASSWORD, "").apply();
 				break;
 		}
 	}
