@@ -41,7 +41,6 @@
 						\n如果有找到錯誤 留下一些訊息 會盡快修復
 	</string>
 	<string name="refresh_fail">重新整理失敗 再試一次！</string>
-	<string name="version">v0.6.4</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">一</string>
