@@ -252,113 +252,122 @@ public class RetrieveTask extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected void onPostExecute(String content) {
-		switch (content) {
-			case RESULT_WRONG_CREDENTIALS:
-				if (mode.equals(MODE_LOGIN)) {
-					errorMsg.setText(context.getResources().getString(R.string.wrong_username_password));
-					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.login_fail));
-				} else if (mode.equals(MODE_RELOAD)) {
-					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.reload_fail));
-				}
-				break;
-			case RESULT_EXCEPTION_OCCUR:
-				if (mode.equals(MODE_LOGIN)) {
-					errorMsg.setText(context.getResources().getString(R.string.connection_timeout));
-					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.fail));
-				} else if (mode.equals(MODE_RELOAD)){
-					if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.connection_timeout));
-				}
-				break;
-			default:
-				if (mode.equals(MODE_LOGIN)) {
-					if (handler != null) {
-						handler.onLogin(content);
-					} else {
-						Log.i("onPostExecute", "handler null");
-						try {
-							final OnLoginListener handler = (OnLoginListener) context;
-							handler.onLogin(content);
-						} catch (ClassCastException e) {
-							e.printStackTrace();
-						}
-					}
-				} else if (mode.equals(MODE_RELOAD)) {
-					Log.i("onPostExecute", "reload");
-					// store the data in preference
-					final SharedPreferences prefs = context.getSharedPreferences(
-							MainActivity.PREFERENCE, Context.MODE_PRIVATE);
-
-					if (scheduleAdapter != null) {
-						final ArrayList<Course> courses;
-						if (latest) {
-							// Log.i("RetrieveTask", "latest");
-							final LatestHTMLParser parser = new LatestHTMLParser(content);
-							courses = parser.getCourses();
-							prefs.edit().
-									putString(MainActivity.KEY_LATEST_DATA, content).
-									putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
-						} else {
-							// Log.i("RetrieveTask", "old");
-							final HTMLParser parser = new HTMLParser(content);
-							courses = parser.getCourses();
-							prefs.edit().
-									putString(MainActivity.KEY_DATA, content).
-									putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
-						}
-						// Log.i("content", content);
-						for (Course c : courses) {
-							Log.i("course", c.toString());
-						}
-
-						// sort according to year and semester
-						Collections.sort(courses);
-
-						if (courses.size() > 0) {
-							// find the latest courses and set adapter
-							final Course latest = courses.get(0);
-							final ArrayList<Course> latestCourses = new ArrayList<>();
-							for (Course course : courses) {
-								if (course.getCourseYear() == latest.getCourseYear() &&
-										course.getSemester().equals(latest.getSemester()))
-									latestCourses.add(course);
-							}
-
-							// update adapter
-							if (MainFragment.hasSaturdayCourse(latestCourses)) {
-								weekday.setNumColumns(7);
-								weekdayAdapter.setNumDays(7);
-								weekdayAdapter.notifyDataSetChanged();
-								schedule.setNumColumns(7);
-								scheduleAdapter.setLatestCourses(latestCourses, 7);
-								scheduleAdapter.notifyDataSetChanged();
-							} else {
-								weekday.setNumColumns(6);
-								weekdayAdapter.setNumDays(6);
-								weekdayAdapter.notifyDataSetChanged();
-								schedule.setNumColumns(6);
-								scheduleAdapter.setLatestCourses(latestCourses, 6);
-								scheduleAdapter.notifyDataSetChanged();
-							}
-
-							// debug info
-							for (Course c : latestCourses) {
-								Log.i("RetrieveTask", c.toString());
-							}
-						}
-					} else {
-						Log.i("schedule adapter", "schedule adapter null pointer");
-					}
-				}
-				break;
-		}
-
-		// protect from crashing
-		// if the user decide to hide the ui
-		// and the retrieve task return
 		try {
-			if (dialog != null) dialog.dismiss();
+			switch (content) {
+				case RESULT_WRONG_CREDENTIALS:
+					if (mode.equals(MODE_LOGIN)) {
+						errorMsg.setText(context.getResources().getString(R.string.wrong_username_password));
+						if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.login_fail));
+					} else if (mode.equals(MODE_RELOAD)) {
+						if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.reload_fail));
+					}
+					break;
+				case RESULT_EXCEPTION_OCCUR:
+					if (mode.equals(MODE_LOGIN)) {
+						errorMsg.setText(context.getResources().getString(R.string.connection_timeout));
+						if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.fail));
+					} else if (mode.equals(MODE_RELOAD)){
+						if (dialog != null) dialog.setMessage(context.getResources().getString(R.string.connection_timeout));
+					}
+					break;
+				default:
+					if (mode.equals(MODE_LOGIN)) {
+						if (handler != null) {
+							handler.onLogin(content);
+						} else {
+							Log.i("onPostExecute", "handler null");
+							try {
+								final OnLoginListener handler = (OnLoginListener) context;
+								handler.onLogin(content);
+							} catch (ClassCastException e) {
+								e.printStackTrace();
+							}
+						}
+					} else if (mode.equals(MODE_RELOAD)) {
+						Log.i("onPostExecute", "reload");
+						// store the data in preference
+						final SharedPreferences prefs = context.getSharedPreferences(
+								MainActivity.PREFERENCE, Context.MODE_PRIVATE);
+
+						if (scheduleAdapter != null) {
+							final ArrayList<Course> courses;
+							if (latest) {
+								// Log.i("RetrieveTask", "latest");
+								final LatestHTMLParser parser = new LatestHTMLParser(content);
+								courses = parser.getCourses();
+								prefs.edit().
+										putString(MainActivity.KEY_LATEST_DATA, content).
+										putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
+							} else {
+								// Log.i("RetrieveTask", "old");
+								final HTMLParser parser = new HTMLParser(content);
+								courses = parser.getCourses();
+								prefs.edit().
+										putString(MainActivity.KEY_DATA, content).
+										putBoolean(MainActivity.KEY_LOGIN_SUCCESS, true).apply();
+							}
+							// Log.i("content", content);
+							for (Course c : courses) {
+								Log.i("course", c.toString());
+							}
+
+							// sort according to year and semester
+							Collections.sort(courses);
+
+							if (courses.size() > 0) {
+								// find the latest courses and set adapter
+								final Course latest = courses.get(0);
+								final ArrayList<Course> latestCourses = new ArrayList<>();
+								for (Course course : courses) {
+									if (course.getCourseYear() == latest.getCourseYear() &&
+											course.getSemester().equals(latest.getSemester()))
+										latestCourses.add(course);
+								}
+
+								// update adapter
+								if (MainFragment.hasSaturdayCourse(latestCourses)) {
+									weekday.setNumColumns(7);
+									weekdayAdapter.setNumDays(7);
+									weekdayAdapter.notifyDataSetChanged();
+									schedule.setNumColumns(7);
+									scheduleAdapter.setLatestCourses(latestCourses, 7);
+									scheduleAdapter.notifyDataSetChanged();
+								} else {
+									weekday.setNumColumns(6);
+									weekdayAdapter.setNumDays(6);
+									weekdayAdapter.notifyDataSetChanged();
+									schedule.setNumColumns(6);
+									scheduleAdapter.setLatestCourses(latestCourses, 6);
+									scheduleAdapter.notifyDataSetChanged();
+								}
+
+								// debug info
+								for (Course c : latestCourses) {
+									Log.i("RetrieveTask", c.toString());
+								}
+							}
+						} else {
+							Log.i("schedule adapter", "schedule adapter null pointer");
+						}
+					}
+					break;
+			}
+
+			// protect from crashing
+			// if the user decide to hide the ui
+			// and the retrieve task return
+			try {
+				if (dialog != null) dialog.dismiss();
+			} catch (Exception e) {
+				Log.i("onPostExecute", "Main UI is hidden");
+			}
 		} catch (Exception e) {
-			Log.i("onPostExecute", "Main UI is hidden");
+			// exception will occur when view get recreate and turn into null
+			if (this.context != null) {
+				Toast.makeText(this.context,
+						this.context.getResources().getString(R.string.refresh_fail),
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 }
