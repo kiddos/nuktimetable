@@ -8,6 +8,9 @@
 	<string name="action_about">有關 APP</string>
 	<string name="action_info">資料</string>
 	<string name="action_help">說明</string>
+	<string name="action_preview">選課中</string>
+	<string name="action_course_selection">確定課程</string>
+	<string name="action_e_learning">e 平台</string>
 	<string name="action_get_latest">取得最新課表</string>
 	<string name="login">登入</string>
 	<string name="exit">離開</string>
