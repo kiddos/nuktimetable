@@ -18,7 +18,7 @@ public class Course implements Serializable, Comparable<Course> {
 	private int color;
 
 	public Course(String courseId, String courseName, int courseYear,
-				  String semester, String blocks, String classroom, int viewCount, int color) {
+                String semester, String blocks, String classroom, int viewCount, int color) {
 		this.courseId = courseId;
 		this.courseName = courseName;
 		this.courseYear = courseYear;

@@ -39,8 +39,8 @@ public class MainFragment extends Fragment {
 
 			final SharedPreferences prefs = getActivity().getSharedPreferences(
 					MainActivity.PREFERENCE, Context.MODE_PRIVATE);
-			final boolean shouldDisplayLatest = prefs.getBoolean(
-					MainActivity.KEY_SHOULD_DISPLAY_LATEST, false);
+			final int displayType = prefs.getInt(
+					MainActivity.KEY_DISPLAY_TYPE, 0);
 
 			// retrieve old content
 			final Bundle arg = getArguments();
@@ -48,14 +48,21 @@ public class MainFragment extends Fragment {
 			final String content;
 
 			final ArrayList<Course> courses;
-			if (shouldDisplayLatest) {
-				Log.i("MainFragment", "should display latest");
-				content = prefs.getString(MainActivity.KEY_LATEST_DATA, "");
+			if (RetrieveTask.Type.getType(displayType) ==
+          RetrieveTask.Type.COURSE_SELECTION) {
+				Log.i("MainFragment", "retrieve course selection data");
+				content = prefs.getString(MainActivity.KEY_COURSE_SELECTION_DATA, "");
 				final LatestHTMLParser parser = new LatestHTMLParser(content);
 				courses = parser.getCourses();
-			} else {
+			} else if (RetrieveTask.Type.getType(displayType) ==
+                 RetrieveTask.Type.PREVIEW) {
+        Log.i("MainFragment", "retrieve preview data");
+        content = prefs.getString(MainActivity.KEY_PREVIEW_DATA, "");
+        final PreviewHTMLParser parser = new PreviewHTMLParser(content);
+        courses = parser.getCourses();
+      } else {
 				Log.i("MainFragment", "should NOT display latest");
-				content = prefs.getString(MainActivity.KEY_DATA, "");
+				content = prefs.getString(MainActivity.KEY_E_LEARNING_DATA, "");
 				final HTMLParser parser = new HTMLParser(content);
 				courses = parser.getCourses();
 			}
@@ -113,25 +120,48 @@ public class MainFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
+    final SharedPreferences prefs = getActivity().
+        getSharedPreferences(LoginFragment.PREFERENCE, Context.MODE_PRIVATE);
+    final SharedPreferences mainPrefs = getActivity().
+        getSharedPreferences(MainActivity.PREFERENCE, Context.MODE_PRIVATE);
+
+    // get the store username / password
+    final String username = prefs.getString(LoginFragment.KEY_USERNAME, "");
+    final String password = prefs.getString(LoginFragment.KEY_PASSWORD, "");
+    int id = item.getItemId();
 		if (id == R.id.action_reload) {
 			Log.i("onOptionsItemSelected", "reload");
-
-			// get the store username / password
-			final SharedPreferences prefs = getActivity().
-					getSharedPreferences(LoginFragment.PREFERENCE, Context.MODE_PRIVATE);
-
-			final String username = prefs.getString(LoginFragment.KEY_USERNAME, "");
-			final String password = prefs.getString(LoginFragment.KEY_PASSWORD, "");
-
 			// reload task
-			final SharedPreferences mainPrefs = getActivity().
-					getSharedPreferences(MainActivity.PREFERENCE, Context.MODE_PRIVATE);
-			// Log.i("should display latest", mainPrefs.getBoolean(MainActivity.KEY_SHOULD_DISPLAY_LATEST, false) + "");
+      int displayType = mainPrefs.getInt(MainActivity.KEY_DISPLAY_TYPE, 0);
+      Log.i("MainFragment", "display type:" + displayType);
 			new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter,
-					scheduleAdapter, mainPrefs.getBoolean(MainActivity.KEY_SHOULD_DISPLAY_LATEST, false)).
+					scheduleAdapter, RetrieveTask.Type.getType(displayType)).
 					execute(username, password);
-		}
+    } else if (id == R.id.action_e_learning) {
+      mainPrefs.edit().putInt(MainActivity.KEY_DISPLAY_TYPE,
+          RetrieveTask.Type.E_LEARNING.getValue()).apply();
+      Log.i("MainFragment", "value: " + RetrieveTask.Type.E_LEARNING.getValue());
+
+      new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter,
+          scheduleAdapter, RetrieveTask.Type.E_LEARNING).
+          execute(username, password);
+    } else if (id == R.id.action_course_selected) {
+      mainPrefs.edit().putInt(MainActivity.KEY_DISPLAY_TYPE,
+          RetrieveTask.Type.COURSE_SELECTION.getValue()).apply();
+      Log.i("MainFragment", "value: " + RetrieveTask.Type.COURSE_SELECTION.getValue());
+
+      new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter,
+          scheduleAdapter, RetrieveTask.Type.COURSE_SELECTION).
+          execute(username, password);
+    } else if (id == R.id.action_preview) {
+      mainPrefs.edit().putInt(MainActivity.KEY_DISPLAY_TYPE,
+          RetrieveTask.Type.PREVIEW.getValue()).apply();
+      Log.i("MainFragment", "value: " + RetrieveTask.Type.PREVIEW.getValue());
+
+      new RetrieveTask(getActivity(), weekday, schedule, weekdayAdapter,
+          scheduleAdapter, RetrieveTask.Type.PREVIEW).
+          execute(username, password);
+    }
 		return super.onOptionsItemSelected(item);
 	}
 
