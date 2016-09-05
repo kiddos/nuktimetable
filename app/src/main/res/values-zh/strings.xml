@@ -1,4 +1,5 @@
 <resources>
+	<string name="version">v2.0.0</string>
 	<string name="app_name">高雄大學 課表</string>
 	<string name="test">The Quick brown Fox jumps over the lazy dog</string>
 	<string name="user_name">帳號:</string>

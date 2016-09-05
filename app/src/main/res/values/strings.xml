@@ -44,7 +44,7 @@
 		\nIf you find a bug, leave a comment. It will be fixed asap
 	</string>
 	<string name="refresh_fail">Refresh fail, try again!</string>
-	<string name="version">v1.0.0</string>
+	<string name="version">v2.0.0</string>
 
 	<!-- week days -->
 	<string name="monday_abbr">Mon</string>

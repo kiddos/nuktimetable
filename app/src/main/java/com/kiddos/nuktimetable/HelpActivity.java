@@ -1,10 +1,8 @@
 package com.kiddos.nuktimetable;
 
 import android.app.*;
-import android.graphics.*;
 import android.os.*;
 import android.view.*;
-import android.widget.*;
 
 public class HelpActivity extends Activity {
 	@Override
